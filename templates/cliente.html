@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Completar Datero</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+    transition: all 0.2s ease;
+}
+
+body {
+    font-family: 'Inter', Arial;
+    background: #f5f6fa;
+    margin: 0;
+}
+
+/* HEADER */
+.header {
+    background: #FFD600;
+    padding: 16px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* CONTENEDOR */
+.container {
+    max-width: 650px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
+}
+
+/* TITULOS */
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #333;
+    border-left: 4px solid #FFD600;
+    padding-left: 8px;
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus {
+    border: 1px solid #FFD600;
+    box-shadow: 0 0 6px rgba(255,214,0,0.4);
+}
+
+/* BOTON */
+button {
+    width: 100%;
+    padding: 14px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:hover {
+    background: #333;
+    transform: scale(1.02);
+}
+
+/* EFECTO CARD */
+.container:hover {
+    transform: translateY(-2px);
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">AMAT - Completar Datero</div>
+
+<div class="container">
+
+<h2>Datos del Cliente</h2>
+
+<form action="/guardar" method="post">
+
+<h3>Datos Personales</h3>
+<input name="nombre" placeholder="Nombre completo">
+<input name="dni" placeholder="DNI">
+<input name="nacionalidad" placeholder="Nacionalidad">
+<input name="domicilio" placeholder="Domicilio">
+<input name="localidad" placeholder="Localidad">
+<input name="cp" placeholder="Código Postal">
+<input name="cuit" placeholder="CUIT">
+<input name="provincia" placeholder="Provincia">
+<input name="celular" placeholder="Teléfono">
+<input name="email" placeholder="Email">
+
+<h3>Datos Bancarios</h3>
+<input name="cbu" placeholder="CBU">
+
+<h3>Datos Laborales</h3>
+<input name="loc_laboral" placeholder="Localidad Laboral">
+
+<h3>Referencia 1</h3>
+<input name="ref1_parentesco" placeholder="Parentesco">
+<input name="ref1_nombre" placeholder="Nombre">
+<input name="ref1_tel" placeholder="Teléfono">
+
+<h3>Referencia 2</h3>
+<input name="ref2_parentesco" placeholder="Parentesco">
+<input name="ref2_nombre" placeholder="Nombre">
+<input name="ref2_tel" placeholder="Teléfono">
+
+<!-- 🔥 DATOS DEL SISTEMA -->
+<input type="hidden" name="reparticion" value="{{ reparticion }}">
+<input type="hidden" name="monto" value="{{ monto }}">
+<input type="hidden" name="cuotas" value="{{ cuotas }}">
+<input type="hidden" name="valor_cuota" value="{{ valor_cuota }}">
+
+<input type="hidden" name="cuota_social" value="{{ cuota_social }}">
+<input type="hidden" name="medico" value="{{ medico }}">
+<input type="hidden" name="farmacia" value="{{ farmacia }}">
+
+<button type="submit">Generar Datero PDF</button>
+
+</form>
+
+</div>
