@@ -80,7 +80,8 @@ def calcular():
     cuota_social, medico, farmacia = calcular_membresia(reparticion, monto)
     valor_cuota = calcular_cuota(monto, cuotas)
 
-    link = f"http://127.0.0.1:5000/cliente?rep={reparticion}&monto={monto}&cuotas={cuotas}"
+    # 🔥 LINK CORRECTO ONLINE
+    link = f"https://datero-amat.onrender.com/cliente?rep={reparticion}&monto={monto}&cuotas={cuotas}"
 
     return render_template(
         "resultado.html",
