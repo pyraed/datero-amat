@@ -1,19 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
+<title>Login AMAT</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+    transition: all 0.2s ease;
+}
+
+body {
+    font-family: 'Inter', Arial;
+    background: #f5f6fa;
+    margin: 0;
+}
+
+/* HEADER */
+.header {
+    background: #FFD600;
+    padding: 16px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* CARD */
+.container {
+    max-width: 380px;
+    margin: 80px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
+}
+
+/* TITULO */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+input:focus {
+    border: 1px solid #FFD600;
+    box-shadow: 0 0 6px rgba(255,214,0,0.4);
+}
+
+/* BOTON */
+button {
+    width: 100%;
+    padding: 16px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #333;
+    transform: scale(1.02);
+}
+
+/* EFECTO CARD */
+.container:hover {
+    transform: translateY(-2px);
+}
+</style>
 </head>
 
 <body>
 
-<h2>Login</h2>
+<div class="header">AMAT - Acceso</div>
+
+<div class="container">
+
+<h2>Iniciar sesión</h2>
 
 <form method="POST">
 <input name="user" placeholder="Usuario">
 <input name="password" type="password" placeholder="Contraseña">
 <button type="submit">Ingresar</button>
 </form>
+
+</div>
 
 </body>
 </html>
