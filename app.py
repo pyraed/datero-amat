@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, redirect, session
 import csv
 import io
 from reportlab.lib.pagesizes import letter
@@ -6,6 +6,37 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 
 app = Flask(__name__)
+app.secret_key = "amat_secreto_123"
+
+# 🔐 USUARIO HARDCODE (después lo mejoramos)
+USUARIO = "admin"
+PASSWORD = "1234"
+
+# ---------------- LOGIN ----------------
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        user = request.form["user"]
+        password = request.form["password"]
+
+        if user == USUARIO and password == PASSWORD:
+            session["logueado"] = True
+            return redirect("/")
+        else:
+            return "Usuario o contraseña incorrectos"
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+
+
+def requiere_login():
+    return "logueado" in session
 
 # ---------------- LOGICA ----------------
 
@@ -68,11 +99,16 @@ def calcular_cuota(monto, cuotas):
 
 @app.route("/")
 def inicio():
+    if not requiere_login():
+        return redirect("/login")
     return render_template("index.html")
 
 
 @app.route("/calcular", methods=["POST"])
 def calcular():
+    if not requiere_login():
+        return redirect("/login")
+
     reparticion = request.form["reparticion"]
     monto = int(request.form["monto"])
     cuotas = int(request.form["cuotas"])
@@ -80,7 +116,6 @@ def calcular():
     cuota_social, medico, farmacia = calcular_membresia(reparticion, monto)
     valor_cuota = calcular_cuota(monto, cuotas)
 
-    # 🔥 LINK CORRECTO ONLINE
     link = f"https://datero-amat.onrender.com/cliente?rep={reparticion}&monto={monto}&cuotas={cuotas}"
 
     return render_template(
@@ -115,104 +150,3 @@ def cliente():
         medico=formatear(medico),
         farmacia=formatear(farmacia)
     )
-
-
-@app.route("/guardar", methods=["POST"])
-def guardar():
-    datos = request.form
-
-    with open("datos_clientes.csv", "a", newline="", encoding="utf-8") as archivo:
-        writer = csv.writer(archivo)
-        writer.writerow(datos.values())
-
-    buffer = io.BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=20, bottomMargin=20)
-
-    elementos = []
-
-    def tabla(titulo, filas):
-        data = [[titulo, ""]] + filas
-        t = Table(data, colWidths=[200, 250])
-        t.setStyle(TableStyle([
-            ("SPAN", (0,0), (1,0)),
-            ("BACKGROUND", (0,0), (-1,0), colors.grey),
-            ("GRID", (0,0), (-1,-1), 1, colors.black),
-            ("FONTSIZE", (0,0), (-1,-1), 8)
-        ]))
-        return t
-
-    elementos.append(tabla("DATOS PERSONALES", [
-        ["Apellido y Nombre", datos.get("nombre")],
-        ["DNI", datos.get("dni")],
-        ["Nacionalidad", datos.get("nacionalidad")],
-        ["Domicilio", datos.get("domicilio")],
-        ["Localidad", datos.get("localidad")],
-        ["CP", datos.get("cp")],
-        ["CUIT", datos.get("cuit")],
-        ["Provincia", datos.get("provincia")],
-        ["Teléfono", datos.get("celular")],
-        ["Email", datos.get("email")]
-    ]))
-
-    elementos.append(tabla("DATOS BANCARIOS", [["CBU", datos.get("cbu")]]))
-
-    elementos.append(tabla("DATOS LABORALES", [
-        ["Repartición", datos.get("reparticion")],
-        ["Localidad", datos.get("loc_laboral")]
-    ]))
-
-    elementos.append(tabla("MEMBRESÍA", [
-        ["Cuota Social", datos.get("cuota_social")],
-        ["Coseguro Médico", datos.get("medico")],
-        ["Coseguro Farmacia", datos.get("farmacia")]
-    ]))
-
-    elementos.append(tabla("REFERENCIA 1", [
-        ["Parentesco", datos.get("ref1_parentesco")],
-        ["Nombre", datos.get("ref1_nombre")],
-        ["Teléfono", datos.get("ref1_tel")]
-    ]))
-
-    elementos.append(tabla("REFERENCIA 2", [
-        ["Parentesco", datos.get("ref2_parentesco")],
-        ["Nombre", datos.get("ref2_nombre")],
-        ["Teléfono", datos.get("ref2_tel")]
-    ]))
-
-    elementos.append(tabla("DATOS DE LA AYUDA ECONÓMICA", [
-        ["Monto", datos.get("monto")],
-        ["Cuotas", datos.get("cuotas")],
-        ["Valor Cuota", datos.get("valor_cuota")]
-    ]))
-
-    # 🔥 LEYENDA CORREGIDA (no se desborda)
-    leyenda = Table([
-    ["Declaro conocer los derechos y obligaciones de los socios de AMAT, las condiciones generales de la prestación recibida la autorización para retención de cuota"],
-    ["y descuento de haberes y CBU Resolución 1481 - INAES - ANEXO. Ley Nº 25.246 y ANEXOS correspondientes al organismo donde desempeño mi relación laboral."],   
-    ["Importe a transferir sujeto a grilla del fondeador (en base al Decreto 988/21)."],
-    ["El crédito puede ser pasible del cobro del impuesto al sello (1,2%), según línea crediticia."],
-    ["Registro de firma para legajo y aceptación de plan aprobado"]
-    ], colWidths=[460])
-
-    leyenda.setStyle(TableStyle([
-    ("FONTSIZE", (0,0), (-1,-1), 7),
-    ("LEFTPADDING", (0,0), (-1,-1), 2),
-    ("RIGHTPADDING", (0,0), (-1,-1), 2),
-    ("TOPPADDING", (0,0), (-1,-1), 1),
-    ("BOTTOMPADDING", (0,0), (-1,-1), 1),
-    ]))
-
-    elementos.append(leyenda)
-
-    firma = Table([["Firma"],[""]], colWidths=[450], rowHeights=[15,60])
-    firma.setStyle(TableStyle([("GRID",(0,0),(-1,-1),1,colors.black)]))
-    elementos.append(firma)
-
-    doc.build(elementos)
-    buffer.seek(0)
-
-    return send_file(buffer, as_attachment=True, download_name="datero.pdf", mimetype="application/pdf")
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
