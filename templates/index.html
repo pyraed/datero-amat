@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<!-- Título de la página (lo que aparece en la pestaña del navegador) -->
 <title>AMAT - Simulador</title>
 
+<!-- Hace que el diseño sea responsive (se adapte a celular) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Importa la fuente "Inter" desde Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+
+/* Aplica una transición suave a todos los elementos */
 * { transition: all 0.2s ease; }
 
+/* Estilo general del body */
 body {
     font-family: 'Inter', sans-serif;
     background: #f5f6fa;
     margin: 0;
 }
 
+/* Barra superior amarilla */
 .header {
     background: #FFD600;
     padding: 16px;
@@ -24,6 +32,7 @@ body {
     font-size: 18px;
 }
 
+/* Contenedor principal centrado */
 .container {
     max-width: 500px;
     margin: 30px auto;
@@ -33,16 +42,19 @@ body {
     box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
 }
 
+/* Título principal */
 h2 {
     margin-bottom: 20px;
     text-align: center;
 }
 
+/* Labels de los campos */
 label {
     font-weight: 600;
     font-size: 14px;
 }
 
+/* Estilo de los select */
 select {
     width: 100%;
     padding: 14px;
@@ -53,6 +65,7 @@ select {
     font-size: 16px;
 }
 
+/* Botón principal */
 button {
     width: 100%;
     padding: 16px;
@@ -64,23 +77,36 @@ button {
     font-size: 16px;
 }
 
+/* Efecto hover del botón */
 button:hover {
     background: #333;
     transform: scale(1.02);
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="header">AMAT - Mutual Amarilla</div>
+<!-- Header superior -->
+<div class="header" id="headerEntidad">AMAT - Mutual Amarilla</div>
 
+<!-- Contenedor principal -->
 <div class="container">
 
+<!-- Título -->
 <h2>Simular Oferta</h2>
 
-<form action="/calcular" method="post">
+<!-- Formulario que envía datos al endpoint /calcular -->
+<form id="formulario" method="post">
 
+<label>Entidad</label>
+<select name="entidad">
+<option value="amat">AMAT</option>
+<option value="dos_agosto">2 de Agosto</option>
+</select>    
+
+<!-- Selector de repartición -->
 <label>Repartición</label>
 <select name="reparticion">
 <option value="policia">Policía</option>
@@ -89,26 +115,66 @@ button:hover {
 <option value="spb">SPB</option>
 </select>
 
+<!-- Selector de monto -->
 <label>Monto</label>
 <select name="monto">
+
+<!-- Genera automáticamente opciones desde 100.000 hasta 2.000.000 de 100.000 en 100.000 -->
 {% for i in range(100000, 2000001, 100000) %}
 <option value="{{ i }}">
 $ {{ "{:,}".format(i).replace(",", ".") }}
 </option>
 {% endfor %}
+
 </select>
 
+<!-- Selector de cantidad de cuotas -->
 <label>Cuotas</label>
 <select name="cuotas">
 <option value="12">12 cuotas</option>
 <option value="24">24 cuotas</option>
 </select>
 
+<!-- Botón para enviar el formulario -->
 <button type="submit">Calcular Oferta</button>
 
 </form>
 
 </div>
 
+
+<script>
+const selectEntidad = document.querySelector('select[name="entidad"]');
+const header = document.getElementById("headerEntidad");
+
+selectEntidad.addEventListener("change", function() {
+    if (this.value === "dos_agosto") {
+        header.innerText = "Mutual 2 de Agosto";
+        header.style.background = "#2C2C2C"; // gris
+    } else {
+        header.innerText = "AMAT - Mutual Amarilla";
+        header.style.background = "#FFD600";
+    }
+});
+
+
+
+</script>
+</script>
+
+<script>
+const form = document.getElementById("formulario");
+const entidadSelect = document.querySelector('select[name="entidad"]');
+
+form.addEventListener("submit", function(e) {
+    const entidad = entidadSelect.value;
+
+    if (entidad === "dos_agosto") {
+        form.action = "/calcular?ent=dos_agosto";
+    } else {
+        form.action = "/calcular?ent=amat";
+    }
+});
+</script>
 </body>
 </html>

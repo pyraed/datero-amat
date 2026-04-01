@@ -1,28 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Completar Datero</title>
 
+<!-- Título de la página -->
+<div class="header" 
+{% if entidad == "dos_agosto" %}
+style="background:#2C2C2C; color:white;"
+{% else %}
+style="background:#FFD600;"
+{% endif %}
+>
+{% if entidad == "dos_agosto" %}
+Mutual 2 de Agosto - Completar Datero
+{% else %}
+AMAT - Completar Datero
+{% endif %}
+</div>
+
+<!-- Configuración responsive para celulares -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Fuente Inter desde Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+
+/* Transición suave en todos los elementos */
 * { transition: all 0.2s ease; }
 
+/* Estilo general del body */
 body {
     font-family: 'Inter', Arial;
     background: #f5f6fa;
     margin: 0;
 }
 
+/* Header superior */
 .header {
-    background: #FFD600;
+    color: white;
     padding: 16px;
     text-align: center;
     font-weight: 600;
+    {% if entidad == "dos_agosto" %}
+    background: #2C2C2C;
+    {% else %}
+    background: #FFD600;
+    {% endif %}
 }
 
+/* Contenedor principal */
 .container {
     max-width: 650px;
     margin: 30px auto;
@@ -31,10 +57,12 @@ body {
     border-radius: 14px;
 }
 
+/* Título principal */
 h2 {
     text-align: center;
 }
 
+/* Subtítulos de secciones */
 h3 {
     margin-top: 25px;
     font-size: 14px;
@@ -42,6 +70,7 @@ h3 {
     padding-left: 8px;
 }
 
+/* Inputs del formulario */
 input {
     width: 100%;
     padding: 14px;
@@ -51,6 +80,7 @@ input {
     font-size: 16px;
 }
 
+/* Botón principal */
 button {
     width: 100%;
     padding: 16px;
@@ -67,14 +97,30 @@ button {
 
 <body>
 
-<div class="header">AMAT - Completar Datero</div>
+<h1>{{ entidad }}</h1>  
 
+<!-- Header -->
+<div class="header" 
+{% if entidad == "dos_agosto" %}
+style="background:#2C2C2C; color:white;"
+{% else %}
+style="background:#FFD600;"
+{% endif %}
+>
+
+<!-- Contenedor principal -->
 <div class="container">
 
+<!-- Título -->
 <h2>Datos del Cliente</h2>
+<p style="text-align:center; font-size:14px; margin-bottom:20px;">
+Entidad: {{ entidad }}
+</p>
 
+<!-- Formulario que envía datos a /guardar -->
 <form action="/guardar" method="post">
 
+<!-- Sección datos personales -->
 <h3>Datos Personales</h3>
 <input name="nombre" placeholder="Nombre completo">
 <input name="dni" placeholder="DNI">
@@ -87,22 +133,28 @@ button {
 <input name="celular" placeholder="Teléfono">
 <input name="email" placeholder="Email">
 
+<!-- Sección datos bancarios -->
 <h3>Datos Bancarios</h3>
 <input name="cbu" placeholder="CBU">
 
+<!-- Sección datos laborales -->
 <h3>Datos Laborales</h3>
 <input name="loc_laboral" placeholder="Localidad Laboral">
 
+<!-- Referencia 1 -->
 <h3>Referencia 1</h3>
 <input name="ref1_parentesco" placeholder="Parentesco">
 <input name="ref1_nombre" placeholder="Nombre">
 <input name="ref1_tel" placeholder="Teléfono">
 
+<!-- Referencia 2 -->
 <h3>Referencia 2</h3>
 <input name="ref2_parentesco" placeholder="Parentesco">
 <input name="ref2_nombre" placeholder="Nombre">
 <input name="ref2_tel" placeholder="Teléfono">
 
+<!-- Datos ocultos que vienen desde el cálculo -->
+ <input type="hidden" name="entidad" value="{{ entidad }}">
 <input type="hidden" name="reparticion" value="{{ reparticion }}">
 <input type="hidden" name="monto" value="{{ monto }}">
 <input type="hidden" name="cuotas" value="{{ cuotas }}">
@@ -111,6 +163,7 @@ button {
 <input type="hidden" name="medico" value="{{ medico }}">
 <input type="hidden" name="farmacia" value="{{ farmacia }}">
 
+<!-- Botón para generar el PDF -->
 <button type="submit">Generar Datero PDF</button>
 
 </form>

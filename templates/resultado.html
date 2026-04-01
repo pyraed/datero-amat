@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<!-- Título de la página -->
 <title>Oferta</title>
 
+<!-- Configuración responsive -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Fuente Inter -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+
+/* Transición suave */
 * { transition: all 0.2s ease; }
 
+/* Estilo general */
 body {
     font-family: 'Inter', Arial;
     background: #f5f6fa;
     margin: 0;
 }
 
+/* Tarjeta principal */
 .card {
     max-width: 500px;
     margin: 30px auto;
@@ -25,15 +33,21 @@ body {
     box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
 }
 
+/* Encabezado */
 .header {
-    background: #FFD600;
     padding: 12px;
     font-weight: 600;
     border-radius: 8px;
     margin-bottom: 20px;
     text-align: center;
+    {% if entidad == "dos_agosto" %}
+    background: #2C2C2C;
+    {% else %}
+    background: #FFD600;
+    {% endif %}
 }
 
+/* Ítems de datos (alineados izquierda-derecha) */
 .item {
     display: flex;
     justify-content: space-between;
@@ -41,6 +55,7 @@ body {
     font-size: 15px;
 }
 
+/* Caja de membresía */
 .box {
     background: #f1f3f6;
     padding: 15px;
@@ -48,6 +63,7 @@ body {
     margin-top: 20px;
 }
 
+/* Input del link */
 input {
     width: 100%;
     padding: 14px;
@@ -56,6 +72,7 @@ input {
     font-size: 16px;
 }
 
+/* Botón */
 button {
     width: 100%;
     margin-top: 10px;
@@ -67,20 +84,32 @@ button {
     font-weight: 600;
     font-size: 16px;
 }
+
 </style>
 </head>
 
 <body>
 
+<!-- Contenedor principal -->
 <div class="card">
 
-<div class="header">Detalle de la Oferta</div>
+<!-- Header -->
+<div class="header" id="headerEntidad">
+{% if entidad == "dos_agosto" %}
+Mutual 2 de Agosto
+{% else %}
+AMAT - Mutual Amarilla
+{% endif %}
+</div>
 
+<!-- Datos de la oferta -->
+ <div class="item"><b>Entidad:</b> {{ entidad }}</div>
 <div class="item"><b>Repartición:</b> {{ reparticion }}</div>
 <div class="item"><b>Monto:</b> {{ monto }}</div>
 <div class="item"><b>Cuotas:</b> {{ cuotas }}</div>
 <div class="item"><b>Valor Cuota:</b> {{ valor_cuota }}</div>
 
+<!-- Bloque de membresía -->
 <div class="box">
 <b>Membresía</b>
 <div class="item">Cuota Social: {{ cuota_social }}</div>
@@ -88,21 +117,27 @@ button {
 <div class="item">Coseguro Farmacia: {{ farmacia }}</div>
 </div>
 
+<!-- Sección del link -->
 <h4>Link para enviar</h4>
 
+<!-- Input con el link generado -->
 <input id="linkInput" value="{{ link }}" readonly>
 
+<!-- Botón para copiar -->
 <button onclick="copiarLink()">Copiar Link</button>
 
 </div>
 
 <script>
+
+// Función que copia el link al portapapeles
 function copiarLink() {
     var copyText = document.getElementById("linkInput");
     copyText.select();
     document.execCommand("copy");
     alert("Link copiado ✅");
 }
+
 </script>
 
 </body>

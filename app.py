@@ -1,3 +1,4 @@
+# Importación de librerías necesarias para la app
 from flask import Flask, render_template, request, send_file
 import csv
 import io
@@ -5,14 +6,63 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 
+# Inicialización de la aplicación Flask
 app = Flask(__name__)
 
 # ---------------- LOGICA ----------------
 
+# Función para formatear números al estilo moneda argentina
 def formatear(numero):
     return f"$ {numero:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
-def calcular_membresia(reparticion, monto):
+# Función que calcula cuota social y coseguros según repartición y monto
+def calcular_membresia(entidad, reparticion, monto):
+
+    # =========================
+    # MUTUAL 2 DE AGOSTO
+    # =========================
+    if entidad == "dos_agosto":
+
+        # Caso Policía o SPB
+        if reparticion in ["policia", "spb"]:
+            cuota_social = 4300
+            if monto <= 200000:
+                medico, farmacia = 3850, 3950
+            elif monto <= 300000:
+                medico, farmacia = 6150, 6250
+            elif monto <= 400000:
+                medico, farmacia = 8150, 8250
+            elif monto <= 600000:
+                medico, farmacia = 11850, 11950
+            else:
+                medico, farmacia = 14850, 14950
+
+        # Caso Educación
+        elif reparticion == "educacion":
+            cuota_social = 9900
+            if monto <= 200000:
+                medico, farmacia = 3850, 3950
+            elif monto <= 300000:
+                medico, farmacia = 6150, 6250
+            elif monto <= 400000:
+                medico, farmacia = 8150, 8250
+            else:
+                medico, farmacia = 9998, 9998
+
+        # Caso Salud (valores fijos)
+        elif reparticion == "salud":
+            cuota_social = 4950
+            medico = 5078
+            farmacia = 5214
+
+        return cuota_social, medico, farmacia
+
+
+    # =========================
+    # AMAT (LO ORIGINAL TUYO)
+    # =========================
+
+    # Caso Policía o SPB
     if reparticion in ["policia", "spb"]:
         cuota_social = 4300
         if monto <= 200000:
@@ -26,6 +76,7 @@ def calcular_membresia(reparticion, monto):
         else:
             medico, farmacia = 14850, 14950
 
+    # Caso Educación
     elif reparticion == "educacion":
         cuota_social = 9900
         if monto <= 200000:
@@ -37,15 +88,20 @@ def calcular_membresia(reparticion, monto):
         else:
             medico, farmacia = 9998, 9998
 
+    # Caso Salud (valores fijos)
     elif reparticion == "salud":
         cuota_social = 4950
         medico = 5078
         farmacia = 5214
 
+    # Retorna los valores calculados
     return cuota_social, medico, farmacia
 
 
+# Función que calcula el valor de la cuota del préstamo
 def calcular_cuota(monto, cuotas):
+
+    # Tabla de valores para 12 cuotas
     tabla_12 = {
         100000: 12180.02, 200000: 24360.04, 300000: 36540.06,
         400000: 48720.08, 500000: 60900.10, 600000: 73080.12,
@@ -54,6 +110,7 @@ def calcular_cuota(monto, cuotas):
         2000000: 243600.40
     }
 
+    # Tabla de valores para 24 cuotas
     tabla_24 = {
         100000: 8094.27, 200000: 16188.54, 300000: 24282.82,
         400000: 32377.09, 500000: 40471.36, 600000: 48565.63,
@@ -62,29 +119,38 @@ def calcular_cuota(monto, cuotas):
         2000000: 161885.45
     }
 
+    # Devuelve la cuota según la cantidad de cuotas elegida
     return tabla_12.get(monto, 0) if cuotas == 12 else tabla_24.get(monto, 0)
 
 # ---------------- RUTAS ----------------
 
+# Ruta principal (pantalla inicial)
 @app.route("/")
 def inicio():
     return render_template("index.html")
 
 
+# Ruta que procesa el cálculo de la oferta
 @app.route("/calcular", methods=["POST"])
 def calcular():
+
+    # Obtiene datos del formulario
     reparticion = request.form["reparticion"]
+    entidad = request.args.get("ent")
     monto = int(request.form["monto"])
     cuotas = int(request.form["cuotas"])
 
-    cuota_social, medico, farmacia = calcular_membresia(reparticion, monto)
+    # Calcula valores de membresía y cuota
+    cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
     valor_cuota = calcular_cuota(monto, cuotas)
 
-    # 🔥 LINK CORRECTO ONLINE
-    link = f"https://datero-amat.onrender.com/cliente?rep={reparticion}&monto={monto}&cuotas={cuotas}"
+    # Genera link para enviar al cliente
+    link = f"https://datero-amat.onrender.com/cliente?ent={entidad}&rep={reparticion}&monto={monto}&cuotas={cuotas}"
 
+    # Renderiza pantalla de resultados
     return render_template(
         "resultado.html",
+        entidad=entidad,
         reparticion=reparticion,
         monto=formatear(monto),
         cuotas=cuotas,
@@ -96,17 +162,25 @@ def calcular():
     )
 
 
+# Ruta que abre el cliente (datero)
 @app.route("/cliente")
 def cliente():
+
+    # Obtiene parámetros de la URL
     reparticion = request.args.get("rep")
+    entidad = request.args.get("ent")
+    print("ENTIDAD QUE LLEGA:", entidad)
     monto = int(request.args.get("monto"))
     cuotas = int(request.args.get("cuotas"))
 
-    cuota_social, medico, farmacia = calcular_membresia(reparticion, monto)
+    # Recalcula valores
+    cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
     valor_cuota = calcular_cuota(monto, cuotas)
 
+    # Renderiza formulario del cliente
     return render_template(
         "cliente.html",
+        entidad=entidad,
         reparticion=reparticion,
         monto=formatear(monto),
         cuotas=cuotas,
@@ -117,19 +191,25 @@ def cliente():
     )
 
 
+# Ruta que guarda datos y genera el PDF
 @app.route("/guardar", methods=["POST"])
 def guardar():
+
+    # Obtiene todos los datos enviados desde el formulario
     datos = request.form
 
+    # Guarda los datos en un archivo CSV
     with open("datos_clientes.csv", "a", newline="", encoding="utf-8") as archivo:
         writer = csv.writer(archivo)
         writer.writerow(datos.values())
 
+    # Crea un buffer en memoria para generar el PDF
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=20, bottomMargin=20)
 
     elementos = []
 
+    # Función interna para crear tablas en el PDF
     def tabla(titulo, filas):
         data = [[titulo, ""]] + filas
         t = Table(data, colWidths=[200, 250])
@@ -141,6 +221,7 @@ def guardar():
         ]))
         return t
 
+    # Sección datos personales
     elementos.append(tabla("DATOS PERSONALES", [
         ["Apellido y Nombre", datos.get("nombre")],
         ["DNI", datos.get("dni")],
@@ -154,38 +235,44 @@ def guardar():
         ["Email", datos.get("email")]
     ]))
 
+    # Sección datos bancarios
     elementos.append(tabla("DATOS BANCARIOS", [["CBU", datos.get("cbu")]]))
 
+    # Sección datos laborales
     elementos.append(tabla("DATOS LABORALES", [
         ["Repartición", datos.get("reparticion")],
         ["Localidad", datos.get("loc_laboral")]
     ]))
 
+    # Sección membresía
     elementos.append(tabla("MEMBRESÍA", [
         ["Cuota Social", datos.get("cuota_social")],
         ["Coseguro Médico", datos.get("medico")],
         ["Coseguro Farmacia", datos.get("farmacia")]
     ]))
 
+    # Referencia 1
     elementos.append(tabla("REFERENCIA 1", [
         ["Parentesco", datos.get("ref1_parentesco")],
         ["Nombre", datos.get("ref1_nombre")],
         ["Teléfono", datos.get("ref1_tel")]
     ]))
 
+    # Referencia 2
     elementos.append(tabla("REFERENCIA 2", [
         ["Parentesco", datos.get("ref2_parentesco")],
         ["Nombre", datos.get("ref2_nombre")],
         ["Teléfono", datos.get("ref2_tel")]
     ]))
 
+    # Datos del crédito
     elementos.append(tabla("DATOS DE LA AYUDA ECONÓMICA", [
         ["Monto", datos.get("monto")],
         ["Cuotas", datos.get("cuotas")],
         ["Valor Cuota", datos.get("valor_cuota")]
     ]))
 
-    # 🔥 LEYENDA CORREGIDA (no se desborda)
+    # Texto legal (leyenda)
     leyenda = Table([
     ["Declaro conocer los derechos y obligaciones de los socios de AMAT, las condiciones generales de la prestación recibida la autorización para retención de cuota"],
     ["y descuento de haberes y CBU Resolución 1481 - INAES - ANEXO. Ley Nº 25.246 y ANEXOS correspondientes al organismo donde desempeño mi relación laboral."],   
@@ -204,15 +291,19 @@ def guardar():
 
     elementos.append(leyenda)
 
+    # Espacio de firma
     firma = Table([["Firma"],[""]], colWidths=[450], rowHeights=[15,60])
     firma.setStyle(TableStyle([("GRID",(0,0),(-1,-1),1,colors.black)]))
     elementos.append(firma)
 
+    # Construye el PDF
     doc.build(elementos)
     buffer.seek(0)
 
+    # Devuelve el PDF para descarga
     return send_file(buffer, as_attachment=True, download_name="datero.pdf", mimetype="application/pdf")
 
 
+# Ejecuta la app en modo debug
 if __name__ == "__main__":
     app.run(debug=True)
