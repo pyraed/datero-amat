@@ -23,37 +23,52 @@ def calcular_membresia(entidad, reparticion, monto):
     # =========================
     if entidad == "dos_agosto":
 
-        # Caso Policía o SPB
-        if reparticion in ["policia", "spb"]:
-            cuota_social = 4300
+        # Caso Policía
+        if reparticion in ["policia"]:
+            cuota_social = 9000
             if monto <= 200000:
-                medico, farmacia = 3850, 3950
+                medico, farmacia = 3750, 3950
             elif monto <= 300000:
-                medico, farmacia = 6150, 6250
+                medico, farmacia = 6250, 6450
             elif monto <= 400000:
-                medico, farmacia = 8150, 8250
+                medico, farmacia = 8250, 8450
             elif monto <= 600000:
-                medico, farmacia = 11850, 11950
+                medico, farmacia = 11750, 11950
             else:
-                medico, farmacia = 14850, 14950
+                medico, farmacia = 14750, 14950
 
         # Caso Educación
         elif reparticion == "educacion":
             cuota_social = 9900
             if monto <= 200000:
-                medico, farmacia = 3850, 3950
+                medico, farmacia = 3750, 3950
             elif monto <= 300000:
-                medico, farmacia = 6150, 6250
+                medico, farmacia = 6250, 6450
             elif monto <= 400000:
-                medico, farmacia = 8150, 8250
+                medico, farmacia = 8250, 8450
             else:
                 medico, farmacia = 9998, 9998
 
         # Caso Salud (valores fijos)
         elif reparticion == "salud":
-            cuota_social = 4950
-            medico = 5078
-            farmacia = 5214
+            cuota_social = 0
+            medico = 0
+            farmacia = 0
+
+
+        # Caso SPB (SEPARADO)
+        elif reparticion == "spb":
+             cuota_social = 4300
+        if monto <= 200000:
+           medico, farmacia = 3750, 3950
+        elif monto <= 300000:
+           medico, farmacia = 6250, 6450
+        elif monto <= 400000:
+           medico, farmacia = 8250, 8450
+        elif monto <= 600000:
+           medico, farmacia = 11750, 14950
+        else:
+           medico, farmacia = 14750, 14950   
 
         return cuota_social, medico, farmacia
 
