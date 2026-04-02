@@ -118,9 +118,7 @@ style="background:#FFD600;"
 
 <!-- Título -->
 <h2>Datos del Cliente</h2>
-<p style="text-align:center; font-size:14px; margin-bottom:20px;">
-Entidad: {{ entidad }}
-</p>
+
 
 <!-- Formulario que envía datos a /guardar -->
 <form action="/guardar" method="post">
@@ -129,35 +127,45 @@ Entidad: {{ entidad }}
 <h3>Datos Personales</h3>
 
 <input name="nombre" placeholder="Nombre completo"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras" required>
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')"
+required>
 
 <input name="dni" placeholder="DNI"
-pattern="\d+" inputmode="numeric" title="Solo números" required>
+pattern="\d+" inputmode="numeric"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+required>
 
 <input name="nacionalidad" placeholder="Nacionalidad"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
 <input name="domicilio" placeholder="Domicilio">
 
 <input name="localidad" placeholder="Localidad"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
 <input name="cp" placeholder="Código Postal"
-pattern="\d+" inputmode="numeric">
+pattern="\d+" inputmode="numeric"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 <input name="cuit" placeholder="CUIT"
-pattern="\d+" inputmode="numeric" title="Solo números">
+pattern="\d+" inputmode="numeric"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 <input name="provincia" placeholder="Provincia"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
 <input name="celular" placeholder="Teléfono"
-pattern="\d+" inputmode="numeric">
+pattern="\d+" inputmode="numeric"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 <input type="email" name="email" placeholder="Email">
 
 
-<!-- Fecha de nacimiento (con calendario) -->
+<!-- Fecha de nacimiento -->
 <input type="date" name="fecha_nacimiento">
 
 
@@ -165,40 +173,48 @@ pattern="\d+" inputmode="numeric">
 <h3>Datos Bancarios</h3>
 
 <input name="cbu" placeholder="CBU"
-pattern="\d+" inputmode="numeric">
+pattern="\d+" inputmode="numeric"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 
 <!-- Sección datos laborales -->
 <h3>Datos Laborales</h3>
 
 <input name="loc_laboral" placeholder="Localidad Laboral"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
 
 <!-- Referencia 1 -->
 <h3>Referencia 1</h3>
 
 <input name="ref1_parentesco" placeholder="Parentesco"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
 <input name="ref1_nombre" placeholder="Nombre"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
 <input name="ref1_tel" placeholder="Teléfono"
-pattern="\d+" inputmode="numeric">
+pattern="\d+" inputmode="numeric"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 
 <!-- Referencia 2 -->
 <h3>Referencia 2</h3>
 
 <input name="ref2_parentesco" placeholder="Parentesco"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
 <input name="ref2_nombre" placeholder="Nombre"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
 <input name="ref2_tel" placeholder="Teléfono"
-pattern="\d+" inputmode="numeric">
+pattern="\d+" inputmode="numeric"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 <!-- Datos ocultos que vienen desde el cálculo -->
  <input type="hidden" name="entidad" value="{{ entidad }}">
