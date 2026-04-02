@@ -1,12 +1,24 @@
-# Importación de librerías necesarias para la app
+# Importaciones
 from flask import Flask, render_template, request, send_file
 import csv
 import io
+import pandas as pd
+
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 
-# Inicialización de la aplicación Flask
+
+# Cargar la grilla
+df = pd.read_excel("grilla.xlsx")
+
+# Crear diccionarios
+tabla_12 = dict(zip(df["Monto"], df["Cuotas12"]))
+tabla_18 = dict(zip(df["Monto"], df["Cuotas18"]))
+tabla_24 = dict(zip(df["Monto"], df["Cuotas24"]))
+
+
+# Inicialización Flask
 app = Flask(__name__)
 
 # ---------------- LOGICA ----------------
@@ -116,33 +128,23 @@ def calcular_membresia(entidad, reparticion, monto):
 # Función que calcula el valor de la cuota del préstamo
 def calcular_cuota(monto, cuotas):
 
-    # Tabla de valores para 12 cuotas
-    tabla_12 = {
-        100000: 12180.02, 200000: 24360.04, 300000: 36540.06,
-        400000: 48720.08, 500000: 60900.10, 600000: 73080.12,
-        700000: 85260.14, 800000: 97440.16, 900000: 109620.18,
-        1000000: 121800.20, 1200000: 146160.24, 1500000: 182700.30,
-        2000000: 243600.40
-    }
+    monto = float(monto)
 
-    # Tabla de valores para 24 cuotas
-    tabla_24 = {
-        100000: 8094.27, 200000: 16188.54, 300000: 24282.82,
-        400000: 32377.09, 500000: 40471.36, 600000: 48565.63,
-        700000: 56559.91, 800000: 64754.18, 900000: 72848.45,
-        1000000: 80942.72, 1200000: 97131.27, 1500000: 121414.09,
-        2000000: 161885.45
-    }
-
-    # Devuelve la cuota según la cantidad de cuotas elegida
-    return tabla_12.get(monto, 0) if cuotas == 12 else tabla_24.get(monto, 0)
+    if cuotas == 12:
+        return tabla_12.get(monto, 0)
+    elif cuotas == 18:
+        return tabla_18.get(monto, 0)
+    elif cuotas == 24:
+        return tabla_24.get(monto, 0)
+    else:
+        return 0
 
 # ---------------- RUTAS ----------------
 
 # Ruta principal (pantalla inicial)
 @app.route("/")
 def inicio():
-    return render_template("index.html")
+    return render_template("index.html", montos=tabla_12.keys())
 
 
 # Ruta que procesa el cálculo de la oferta
@@ -152,7 +154,7 @@ def calcular():
     # Obtiene datos del formulario
     reparticion = request.form["reparticion"]
     entidad = request.form["entidad"]  # 👈 FIX
-    monto = int(request.form["monto"])
+    monto = float(request.form["monto"])
     cuotas = int(request.form["cuotas"])
 
     # Calcula valores de membresía y cuota

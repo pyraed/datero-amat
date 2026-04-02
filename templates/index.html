@@ -120,7 +120,7 @@ button:hover {
 <select name="monto">
 
 <!-- Genera automáticamente opciones desde 100.000 hasta 2.000.000 de 100.000 en 100.000 -->
-{% for i in range(100000, 2000001, 100000) %}
+{% for i in montos %}
 <option value="{{ i }}">
 $ {{ "{:,}".format(i).replace(",", ".") }}
 </option>
@@ -131,8 +131,9 @@ $ {{ "{:,}".format(i).replace(",", ".") }}
 <!-- Selector de cantidad de cuotas -->
 <label>Cuotas</label>
 <select name="cuotas">
-<option value="12">12 cuotas</option>
-<option value="24">24 cuotas</option>
+    <option value="12">12 cuotas</option>
+    <option value="18">18 cuotas</option>
+    <option value="24">24 cuotas</option>
 </select>
 
 <!-- Botón para enviar el formulario -->

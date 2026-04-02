@@ -127,36 +127,78 @@ Entidad: {{ entidad }}
 
 <!-- Sección datos personales -->
 <h3>Datos Personales</h3>
-<input name="nombre" placeholder="Nombre completo">
-<input name="dni" placeholder="DNI">
-<input name="nacionalidad" placeholder="Nacionalidad">
+
+<input name="nombre" placeholder="Nombre completo"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras" required>
+
+<input name="dni" placeholder="DNI"
+pattern="\d+" inputmode="numeric" title="Solo números" required>
+
+<input name="nacionalidad" placeholder="Nacionalidad"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+
 <input name="domicilio" placeholder="Domicilio">
-<input name="localidad" placeholder="Localidad">
-<input name="cp" placeholder="Código Postal">
-<input name="cuit" placeholder="CUIT">
-<input name="provincia" placeholder="Provincia">
-<input name="celular" placeholder="Teléfono">
-<input name="email" placeholder="Email">
+
+<input name="localidad" placeholder="Localidad"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+
+<input name="cp" placeholder="Código Postal"
+pattern="\d+" inputmode="numeric">
+
+<input name="cuit" placeholder="CUIT"
+pattern="\d+" inputmode="numeric" title="Solo números">
+
+<input name="provincia" placeholder="Provincia"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+
+<input name="celular" placeholder="Teléfono"
+pattern="\d+" inputmode="numeric">
+
+<input type="email" name="email" placeholder="Email">
+
+
+<!-- Fecha de nacimiento (con calendario) -->
+<input type="date" name="fecha_nacimiento">
+
 
 <!-- Sección datos bancarios -->
 <h3>Datos Bancarios</h3>
-<input name="cbu" placeholder="CBU">
+
+<input name="cbu" placeholder="CBU"
+pattern="\d+" inputmode="numeric">
+
 
 <!-- Sección datos laborales -->
 <h3>Datos Laborales</h3>
-<input name="loc_laboral" placeholder="Localidad Laboral">
+
+<input name="loc_laboral" placeholder="Localidad Laboral"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+
 
 <!-- Referencia 1 -->
 <h3>Referencia 1</h3>
-<input name="ref1_parentesco" placeholder="Parentesco">
-<input name="ref1_nombre" placeholder="Nombre">
-<input name="ref1_tel" placeholder="Teléfono">
+
+<input name="ref1_parentesco" placeholder="Parentesco"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+
+<input name="ref1_nombre" placeholder="Nombre"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+
+<input name="ref1_tel" placeholder="Teléfono"
+pattern="\d+" inputmode="numeric">
+
 
 <!-- Referencia 2 -->
 <h3>Referencia 2</h3>
-<input name="ref2_parentesco" placeholder="Parentesco">
-<input name="ref2_nombre" placeholder="Nombre">
-<input name="ref2_tel" placeholder="Teléfono">
+
+<input name="ref2_parentesco" placeholder="Parentesco"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+
+<input name="ref2_nombre" placeholder="Nombre"
+pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+">
+
+<input name="ref2_tel" placeholder="Teléfono"
+pattern="\d+" inputmode="numeric">
 
 <!-- Datos ocultos que vienen desde el cálculo -->
  <input type="hidden" name="entidad" value="{{ entidad }}">
