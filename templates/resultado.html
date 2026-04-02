@@ -234,7 +234,7 @@ AMAT - Mutual Amarilla
 
 // Función que copia el link al portapapeles
 function copiarLink() {
-    const link = document.getElementById("link").value;
+    const link = document.getElementById("linkInput").value;
     navigator.clipboard.writeText(link);
 
     const msg = document.getElementById("copiadoLinkMsg");
