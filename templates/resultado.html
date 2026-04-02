@@ -85,6 +85,48 @@ button {
     font-size: 16px;
 }
 
+.leyenda {
+    margin-top: 20px;
+    background: #f1f3f6;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.leyenda ul {
+    padding-left: 20px;
+}
+
+.leyenda {
+    position: relative; /* 🔥 clave para el botón */
+    margin-top: 20px;
+    background: #f1f3f6;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Botón copiar flotante */
+.btn-copiar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e0e3e7;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-copiar:hover {
+    background: #d1d5db;
+}
+
 </style>
 </head>
 
@@ -128,6 +170,56 @@ AMAT - Mutual Amarilla
 
 </div>
 
+<div class="leyenda">
+
+    <button class="btn-copiar" onclick="copiarLeyenda()">📋</button>
+
+    <div id="textoLeyenda">
+
+        <p><b>DESCUENTO HABERES</b></p>
+
+        <p>
+        Debe pedir el certificado de Afectación a nombre de 
+        <b>
+        {% if entidad == "dos_agosto" %}
+            Mutual 2 de Agosto
+        {% else %}
+            AMAT
+        {% endif %}
+        </b>.
+        </p>
+
+        <p>
+        <b>PRE-APROBADO:</b> $ {{ monto }} en {{ cuotas }} cuotas de 
+        $ {{ valor_cuota + cuota_social + medico + farmacia }} 
+        (queda sujeto al monto del certificado)
+        </p>
+
+        <p><b>DOCUMENTACIÓN:</b></p>
+
+        <ul>
+            <li>DNI frente y dorso</li>
+            <li>Servicio</li>
+            <li>Datero completo</li>
+            <li>Recibo</li>
+
+            {% if reparticion == "educacion" %}
+            <li>Movimientos</li>
+            {% endif %}
+
+            {% if reparticion == "spb" %}
+            <li>Foto tarjeta de débito (frente y dorso)</li>
+            {% endif %}
+        </ul>
+
+        <p>
+        En caso de querer ofertas en 12 y 18 cuotas, consultar. Saludos.
+        </p>
+
+    </div>
+
+</div>
+
 <script>
 
 // Función que copia el link al portapapeles
@@ -139,6 +231,17 @@ function copiarLink() {
 }
 
 </script>
+
+<script>
+function copiarLeyenda() {
+    const texto = document.getElementById("textoLeyenda").innerText;
+    navigator.clipboard.writeText(texto);
+    alert("Texto copiado ✅");
+}
+</script>
+
+</body>
+</html>
 
 </body>
 </html>
