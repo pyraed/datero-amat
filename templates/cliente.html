@@ -64,8 +64,12 @@ h2 {
 h3 {
     margin-top: 25px;
     font-size: 14px;
-    border-left: 4px solid #F4C542;
+    border-left: 4px solid #F4C542; /* AMAT */
     padding-left: 8px;
+}
+
+body.dark h3 {
+    border-left: 4px solid #2C2C2C; /* 2 de Agosto */
 }
 
 /* Inputs del formulario */
@@ -98,7 +102,7 @@ button:hover {
 </style>
 </head>
 
-<body>
+<body class="{% if entidad == 'dos_agosto' %}dark{% endif %}">
 
 <!-- Header -->
 <div class="header" 
