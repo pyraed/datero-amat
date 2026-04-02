@@ -134,6 +134,11 @@ button {
     display: none; /* oculto por defecto */
 }
 
+.btn-secundario {
+    margin-top: 10px;
+    background: #444;
+}
+
 </style>
 </head>
 
@@ -175,6 +180,10 @@ AMAT - Mutual Amarilla
 <!-- Botón para copiar -->
 <button onclick="copiarLink()">Copiar Link</button>
 <span id="copiadoLinkMsg" class="copiado-msg">✔ Copiado</span>
+
+<!-- Botón copiar todo -->
+<button onclick="copiarTodo()" class="btn-secundario">Copiar Todo</button>
+<span id="copiadoTodoMsg" class="copiado-msg">✔ Copiado</span>
 
 </div>
 
@@ -222,9 +231,7 @@ AMAT - Mutual Amarilla
             {% endif %}
         </ul>
 
-        <p>
-        En caso de querer ofertas en 12 y 18 cuotas, consultar. Saludos.
-        </p>
+
 
     </div>
 
@@ -259,6 +266,24 @@ function copiarLeyenda() {
         msg.style.display = "none";
     }, 2000);
 }
+
+function copiarTodo() {
+    const leyenda = document.getElementById("textoLeyenda").innerText;
+    const link = document.getElementById("linkInput").value;
+
+    const textoCompleto = leyenda + "\n\nLINK:\n" + link;
+
+    navigator.clipboard.writeText(textoCompleto);
+
+    const msg = document.getElementById("copiadoTodoMsg");
+    msg.style.display = "inline";
+
+    setTimeout(() => {
+        msg.style.display = "none";
+    }, 2000);
+}
+
+
 </script>
 
 </body>
