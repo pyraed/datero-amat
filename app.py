@@ -136,13 +136,15 @@ def calcular():
 
     # Obtiene datos del formulario
     reparticion = request.form["reparticion"]
-    entidad = request.args.get("ent")
+    entidad = request.form["entidad"]  # 👈 FIX
     monto = int(request.form["monto"])
     cuotas = int(request.form["cuotas"])
 
     # Calcula valores de membresía y cuota
     cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
     valor_cuota = calcular_cuota(monto, cuotas)
+    cuota_total = valor_cuota + cuota_social + medico + farmacia
+
 
     # Genera link para enviar al cliente
     link = f"https://datero-amat.onrender.com/cliente?ent={entidad}&rep={reparticion}&monto={monto}&cuotas={cuotas}"
@@ -158,6 +160,7 @@ def calcular():
         cuota_social=formatear(cuota_social),
         medico=formatear(medico),
         farmacia=formatear(farmacia),
+        cuota_total=cuota_total,
         link=link
     )
 

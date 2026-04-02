@@ -189,10 +189,9 @@ AMAT - Mutual Amarilla
         </b>.
         </p>
 
-        <p>
-        <b>PRE-APROBADO:</b> $ {{ monto }} en {{ cuotas }} cuotas de 
-        $ {{ valor_cuota + cuota_social + medico + farmacia }} 
-        (queda sujeto al monto del certificado)
+        <p><b>PRE-APROBADO:</b> $ {{ monto }} en {{ cuotas }} cuotas de 
+         $ {{ "{:,.2f}".format(cuota_total).replace(",", "X").replace(".", ",").replace("X", ".") }} 
+        <b>MONTO FINAL</b> (queda sujeto al monto del certificado)
         </p>
 
         <p><b>DOCUMENTACIÓN:</b></p>
@@ -202,6 +201,8 @@ AMAT - Mutual Amarilla
             <li>Servicio</li>
             <li>Datero completo</li>
             <li>Recibo</li>
+            <li>Selfie</li>
+            <li>CBU</li>
 
             {% if reparticion == "educacion" %}
             <li>Movimientos</li>
