@@ -190,7 +190,8 @@ def cliente():
     reparticion = request.args.get("rep")
     entidad = request.args.get("ent")
     print("ENTIDAD QUE LLEGA:", entidad)
-    monto = int(request.args.get("monto"))
+    monto = float(request.args.get("monto"))
+    monto = int(monto)
     cuotas = int(request.args.get("cuotas"))
 
     # Recalcula valores
