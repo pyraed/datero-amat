@@ -7,7 +7,7 @@
 {% if entidad == "dos_agosto" %}
 style="background:#2C2C2C; color:white;"
 {% else %}
-style="background:#FFD600;"
+style="background:#F4C542; color:#1a1a1a;"
 {% endif %}
 >
 {% if entidad == "dos_agosto" %}
@@ -37,15 +37,12 @@ body {
 
 /* Header superior */
 .header {
-    color: white;
     padding: 16px;
     text-align: center;
     font-weight: 600;
-    {% if entidad == "dos_agosto" %}
-    background: #2C2C2C;
-    {% else %}
-    background: #FFD600;
-    {% endif %}
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 650px;
 }
 
 /* Contenedor principal */
@@ -53,8 +50,9 @@ body {
     max-width: 650px;
     margin: 30px auto;
     background: white;
-    padding: 20px;
+    padding: 25px;
     border-radius: 14px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
 }
 
 /* Título principal */
@@ -66,7 +64,7 @@ h2 {
 h3 {
     margin-top: 25px;
     font-size: 14px;
-    border-left: 4px solid #FFD600;
+    border-left: 4px solid #F4C542;
     padding-left: 8px;
 }
 
@@ -78,6 +76,7 @@ input {
     border-radius: 8px;
     border: 1px solid #ddd;
     font-size: 16px;
+    box-sizing: border-box; /* 🔥 arregla el desborde */
 }
 
 /* Botón principal */
@@ -92,12 +91,14 @@ button {
     font-size: 16px;
 }
 
+button:hover {
+    background: #333;
+}
+
 </style>
 </head>
 
 <body>
-
-<h1>{{ entidad }}</h1>  
 
 <!-- Header -->
 <div class="header" 
