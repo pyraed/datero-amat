@@ -180,10 +180,35 @@ def calcular():
 
     elif linea == "ayuda":
 
-        # 🔥 Membresía en 0
-        cuota_social = 1
-        medico = 1
-        farmacia = 1
+     # 🔥 Membresía VISUAL (no suma)
+
+     if entidad == "amat":
+
+       if reparticion == "educacion":
+        cuota_social = 9000
+        medico = 9998
+        farmacia = 9998
+
+       elif reparticion == "salud":
+        cuota_social = 5172
+        medico = 5078
+        farmacia = 5214
+
+     elif entidad == "dos_agosto":
+
+       if reparticion == "educacion":
+        cuota_social = 9900
+        medico = 9998
+        farmacia = 9998
+
+       else:
+        cuota_social = 0
+        medico = 0
+        farmacia = 0
+
+
+
+
 
         # 🔵 AMAT
         if entidad == "amat":
@@ -290,11 +315,33 @@ def cliente():
 
     elif linea == "ayuda":
 
-        cuota_social = 0
-        medico = 0
-        farmacia = 0
+         # 🔥 Membresía VISUAL (no suma)
+         if entidad == "amat":
 
-        if entidad == "amat":
+            if reparticion == "educacion":
+               cuota_social = 9000
+               medico = 9998
+               farmacia = 9998
+
+            elif reparticion == "salud":
+               cuota_social = 5172
+               medico = 5078
+               farmacia = 5214
+
+         elif entidad == "dos_agosto":
+
+           if reparticion == "educacion":
+              cuota_social = 9900
+              medico = 9998
+              farmacia = 9998
+
+           else:
+              cuota_social = 0
+              medico = 0
+              farmacia = 0
+
+
+         if entidad == "amat":
 
             if reparticion == "educacion":
                 monto = 200000
@@ -306,7 +353,7 @@ def cliente():
                 cuotas = 24
                 valor_cuota = 15464
 
-        elif entidad == "dos_agosto":
+         elif entidad == "dos_agosto":
 
             if reparticion == "educacion":
                 monto = 200000
