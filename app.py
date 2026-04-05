@@ -4,6 +4,9 @@ import csv
 import io
 import pandas as pd
 
+from reportlab.platypus import Image
+from reportlab.platypus import Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
@@ -369,6 +372,36 @@ def guardar():
     doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=20, bottomMargin=20)
 
     elementos = []
+    
+    elementos = []
+
+    styles = getSampleStyleSheet()
+
+    # LOGO
+    import os
+    if datos.get("entidad") == "dos_agosto":
+       ruta_logo = os.path.join("static", "img", "dos_agosto.png")
+    else:
+       ruta_logo = os.path.join("static", "img", "amat.png")
+
+    logo = Image(ruta_logo, width=120, height=60)
+
+    elementos.append(logo)
+    elementos.append(Spacer(1, 10))
+
+    # TITULO
+    if datos.get("entidad") == "dos_agosto":
+       titulo = Paragraph("<b>DATERO - MUTUAL 2 DE AGOSTO</b>", styles["Title"])
+    else:
+       titulo = Paragraph("<b>DATERO - AMAT</b>", styles["Title"])
+
+    elementos.append(titulo)
+    elementos.append(Spacer(1, 12))
+
+    # SUBTITULO
+    subtitulo = Paragraph("Formulario de solicitud de crédito", styles["Normal"])
+    elementos.append(subtitulo)
+    elementos.append(Spacer(1, 10))
 
     # Función interna para crear tablas en el PDF
     def tabla(titulo, filas):
