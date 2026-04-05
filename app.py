@@ -27,7 +27,7 @@ app = Flask(__name__)
 
 # Función para formatear números al estilo moneda argentina
 def formatear(numero):
-    return "{:,.0f}".format(numero).replace(",", ".")
+    return "{:,.2f}".format(numero).replace(",", "X").replace(".", ",").replace("X", ".")
 
 # Función que calcula cuota social y coseguros según repartición y monto
 def calcular_membresia(entidad, reparticion, monto):
