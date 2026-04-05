@@ -245,7 +245,7 @@ def calcular():
         cuota_total = valor_cuota + cuota_social
 
     # Genera link para enviar al cliente
-    link = f"https://datero-amat.onrender.com/cliente?ent={entidad}&rep={reparticion}&monto={monto}&cuotas={cuotas}"
+    link = f"https://datero-amat.onrender.com/cliente?ent={entidad}&rep={reparticion}&monto={monto}&cuotas={cuotas}&linea={linea}"
 
     # Renderiza pantalla de resultados
     return render_template(
@@ -272,14 +272,71 @@ def cliente():
     # Obtiene parámetros de la URL
     reparticion = request.args.get("rep")
     entidad = request.args.get("ent")
+    linea = request.args.get("linea") or "haberes"  # 👈 fallback seguro
     print("ENTIDAD QUE LLEGA:", entidad)
+
     monto = float(request.args.get("monto"))
     monto = int(monto)
     cuotas = int(request.args.get("cuotas"))
 
-    # Recalcula valores
-    cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
-    valor_cuota = calcular_cuota(monto, cuotas)
+    # 🔥 LOGICA SEGÚN LINEA
+
+    if linea == "haberes":
+
+        cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
+        valor_cuota = calcular_cuota(monto, cuotas)
+
+    elif linea == "ayuda":
+
+        cuota_social = 0
+        medico = 0
+        farmacia = 0
+
+        if entidad == "amat":
+
+            if reparticion == "educacion":
+                monto = 200000
+                cuotas = 24
+                valor_cuota = 28996
+
+            elif reparticion == "salud":
+                monto = 100000
+                cuotas = 24
+                valor_cuota = 15464
+
+        elif entidad == "dos_agosto":
+
+            if reparticion == "educacion":
+                monto = 200000
+                cuotas = 24
+                valor_cuota = 29896
+
+            elif reparticion == "salud":
+                monto = 0
+                cuotas = 0
+                valor_cuota = 0
+
+    elif linea == "bapro":
+
+        if entidad != "amat":
+            return "Línea BAPRO no disponible para esta entidad"
+
+        medico = 0
+        farmacia = 0
+
+        cuota_social, _, _ = calcular_membresia(entidad, reparticion, monto)
+
+        cuotas = 12
+
+        tabla_bapro = {
+            100000: 12180.02,
+            150000: 18270.03,
+            200000: 24360.04,
+            250000: 0,
+            300000: 0
+        }
+
+        valor_cuota = tabla_bapro.get(monto, 0)
 
     # Renderiza formulario del cliente
     return render_template(
