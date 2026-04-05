@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const opcionesMontoOriginal = montoSelect.innerHTML;
     const opcionesLineaOriginal = lineaSelect.innerHTML; // 👈 NUEVO
 
-    // 👇 NUEVO BLOQUE (no toca lo demás)
+    // 👇 BLOQUE EXISTENTE + FIX
     entidadSelect.addEventListener("change", function () {
         const entidad = this.value;
 
@@ -212,8 +212,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 <option value="haberes">Haberes</option>
                 <option value="ayuda">Ayudas Económicas</option>
             `;
+
+            // 🔥 FIX: si venía de BAPRO, forzar HABERES y reconstruir todo
+            lineaSelect.value = "haberes";
+            lineaSelect.dispatchEvent(new Event("change"));
+
         } else {
             lineaSelect.innerHTML = opcionesLineaOriginal;
+
+            // 🔥 FIX: reconstruir UI también al volver a AMAT
+            lineaSelect.dispatchEvent(new Event("change"));
         }
     });
 
