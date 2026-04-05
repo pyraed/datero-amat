@@ -408,17 +408,11 @@ def guardar():
         ["Provincia", datos.get("provincia")],
         ["Teléfono", datos.get("celular")],
         ["Email", datos.get("email")]
+        ["CBU", datos.get("cbu")],
+        ["Repartición", datos.get("reparticion")]
     ]))
 
-    # Sección datos bancarios
-    elementos.append(tabla("DATOS BANCARIOS", [["CBU", datos.get("cbu")]]))
-
-    # Sección datos laborales
-    elementos.append(tabla("DATOS LABORALES", [
-        ["Repartición", datos.get("reparticion")],
-        ["Localidad", datos.get("loc_laboral")]
-    ]))
-
+    
     # Sección membresía
     elementos.append(tabla("MEMBRESÍA", [
         ["Cuota Social", datos.get("cuota_social")],
