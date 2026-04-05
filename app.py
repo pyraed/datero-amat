@@ -4,7 +4,6 @@ import csv
 import io
 import pandas as pd
 
-from reportlab.platypus import Image
 from reportlab.platypus import Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
@@ -374,15 +373,6 @@ def guardar():
     elementos = []
 
     styles = getSampleStyleSheet()
-
-   # LOGO (desde URL - funciona siempre en Render)
-    if datos.get("entidad") == "dos_agosto":
-       logo = Image("https://datero-amat.onrender.com/static/img/dos_agosto.png", width=120, height=60)
-    else:
-       logo = Image("https://datero-amat.onrender.com/static/img/amat.png", width=120, height=60)
-
-    elementos.append(logo)
-    elementos.append(Spacer(1, 10))
 
     # TITULO
     if datos.get("entidad") == "dos_agosto":
