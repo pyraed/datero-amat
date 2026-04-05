@@ -80,7 +80,7 @@ def calcular_membresia(entidad, reparticion, monto):
         elif monto <= 400000:
            medico, farmacia = 8250, 8450
         elif monto <= 600000:
-           medico, farmacia = 11750, 14950
+           medico, farmacia = 11750, 11950
         else:
            medico, farmacia = 14750, 14950   
 
