@@ -381,12 +381,8 @@ def guardar():
        titulo = Paragraph("<b>DATERO - AMAT</b>", styles["Title"])
 
     elementos.append(titulo)
-    elementos.append(Spacer(1, 12))
+    elementos.append(Spacer(1, 5))
 
-    # SUBTITULO
-    subtitulo = Paragraph("Formulario de solicitud de crédito", styles["Normal"])
-    elementos.append(subtitulo)
-    elementos.append(Spacer(1, 10))
 
     # Función interna para crear tablas en el PDF
     def tabla(titulo, filas):
