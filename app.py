@@ -375,17 +375,11 @@ def guardar():
 
     styles = getSampleStyleSheet()
 
-    # LOGO
-    import os
-
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-
+   # LOGO (desde URL - funciona siempre en Render)
     if datos.get("entidad") == "dos_agosto":
-       ruta_logo = os.path.join(base_dir, "static", "img", "dos_agosto.png")
+       logo = Image("https://datero-amat.onrender.com/static/img/dos_agosto.png", width=120, height=60)
     else:
-       ruta_logo = os.path.join(base_dir, "static", "img", "amat.png")
-
-    logo = Image(ruta_logo, width=120, height=60)
+       logo = Image("https://datero-amat.onrender.com/static/img/amat.png", width=120, height=60)
 
     elementos.append(logo)
     elementos.append(Spacer(1, 10))
