@@ -171,7 +171,7 @@ def calcular():
 
     print("LINEA:", linea)
 
-       # Calcula valores según línea
+    # Calcula valores según línea
     if linea == "haberes":
 
         cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
@@ -180,37 +180,38 @@ def calcular():
 
     elif linea == "ayuda":
 
-     # 🔥 Membresía VISUAL (no suma)
-
-     if entidad == "amat":
-
-       if reparticion == "educacion":
-        cuota_social = 9000
-        medico = 9998
-        farmacia = 9998
-
-       elif reparticion == "salud":
-        cuota_social = 5172
-        medico = 5078
-        farmacia = 5214
-
-     elif entidad == "dos_agosto":
-
-       if reparticion == "educacion":
-        cuota_social = 9900
-        medico = 9998
-        farmacia = 9998
-
-       else:
+        # 🔥 Evita error si algo no coincide
+        valor_cuota = 0
         cuota_social = 0
         medico = 0
         farmacia = 0
 
+        # 🔥 Membresía VISUAL (no suma)
+        if entidad == "amat":
 
+            if reparticion == "educacion":
+                cuota_social = 9000
+                medico = 9998
+                farmacia = 9998
 
+            elif reparticion == "salud":
+                cuota_social = 5172
+                medico = 5078
+                farmacia = 5214
 
+        elif entidad == "dos_agosto":
 
-        # 🔵 AMAT
+            if reparticion == "educacion":
+                cuota_social = 9900
+                medico = 9998
+                farmacia = 9998
+
+            else:
+                cuota_social = 0
+                medico = 0
+                farmacia = 0
+
+        # 🔥 Valores de ayuda
         if entidad == "amat":
 
             if reparticion == "educacion":
@@ -223,7 +224,6 @@ def calcular():
                 cuotas = 24
                 valor_cuota = 15464
 
-        # ⚫ 2 DE AGOSTO
         elif entidad == "dos_agosto":
 
             if reparticion == "educacion":
@@ -239,8 +239,8 @@ def calcular():
         else:
             return "Entidad no válida"
 
+        # 🔥 NO suma membresía (solo visual)
         cuota_total = valor_cuota
-
 
     elif linea == "bapro":
 
@@ -248,17 +248,13 @@ def calcular():
         if entidad != "amat":
             return "Línea BAPRO no disponible para esta entidad"
 
-        # 🔥 Médico y farmacia en 0
         medico = 0
         farmacia = 0
 
-        # 🔥 Cuota social igual a haberes
         cuota_social, _, _ = calcular_membresia(entidad, reparticion, monto)
 
-        # 🔥 Siempre 12 cuotas
         cuotas = 12
 
-        # 🔥 Grilla fija BAPRO
         tabla_bapro = {
             100000: 12180.02,
             150000: 18270.03,
