@@ -441,9 +441,16 @@ def guardar():
         ["Valor Cuota", datos.get("valor_cuota")]
     ]))
 
+
+    # 🔥 Nombre de mutual dinámico
+    if datos.get("entidad") == "dos_agosto":
+       nombre_mutual = "Dos de Agosto"
+    else:
+       nombre_mutual = "AMAT"
+
     # Texto legal (leyenda)
     leyenda = Table([
-    ["Declaro conocer los derechos y obligaciones de los socios de AMAT, las condiciones generales de la prestación recibida la autorización para retención de cuota"],
+    [f"Declaro conocer los derechos y obligaciones de los socios de {nombre_mutual}, las condiciones generales de la prestación recibida la autorización para retención de cuota"],
     ["y descuento de haberes y CBU Resolución 1481 - INAES - ANEXO. Ley Nº 25.246 y ANEXOS correspondientes al organismo donde desempeño mi relación laboral."],   
     ["Importe a transferir sujeto a grilla del fondeador (en base al Decreto 988/21)."],
     ["El crédito puede ser pasible del cobro del impuesto al sello (1,2%), según línea crediticia."],
