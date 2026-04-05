@@ -468,7 +468,7 @@ def guardar():
     elementos.append(leyenda)
 
     # Espacio de firma
-    firma = Table([["Firma"],[""]], colWidths=[450], rowHeights=[20,120])
+    firma = Table([["Firma"],[""]], colWidths=[450], rowHeights=[20,80])
     firma.setStyle(TableStyle([("GRID",(0,0),(-1,-1),1,colors.black)]))
     elementos.append(firma)
 
