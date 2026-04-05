@@ -128,7 +128,7 @@ style="background:#FFD600;"
 <!-- Sección datos personales -->
 <h3>Datos Personales</h3>
 
-<input name="nombre" placeholder="Nombre completo"
+<input name="nombre" placeholder="Apellido y Nombre"
 pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
 oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')"
 required>
@@ -166,24 +166,12 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 <input type="email" name="email" placeholder="Email">
 
-
-<!-- Fecha de nacimiento -->
-<input type="text" name="fecha_nacimiento" placeholder="Fecha de nacimiento" onfocus="this.type='date'">
-
-<!-- Sección datos bancarios -->
-<h3>Datos Bancarios</h3>
-
 <input name="cbu" placeholder="CBU"
 pattern="\d+" inputmode="numeric"
 oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
-
-<!-- Sección datos laborales -->
-<h3>Datos Laborales</h3>
-
-<input name="loc_laboral" placeholder="Localidad Laboral"
-pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
-oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
+<!-- Fecha de nacimiento -->
+<input type="text" name="fecha_nacimiento" placeholder="Fecha de nacimiento" onfocus="this.type='date'">
 
 
 <!-- Referencia 1 -->

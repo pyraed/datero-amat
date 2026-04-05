@@ -398,18 +398,18 @@ def guardar():
 
     # Sección datos personales
     elementos.append(tabla("DATOS PERSONALES", [
-        ["Apellido y Nombre", datos.get("nombre")],
-        ["DNI", datos.get("dni")],
-        ["Nacionalidad", datos.get("nacionalidad")],
-        ["Domicilio", datos.get("domicilio")],
-        ["Localidad", datos.get("localidad")],
-        ["CP", datos.get("cp")],
-        ["CUIT", datos.get("cuit")],
-        ["Provincia", datos.get("provincia")],
-        ["Teléfono", datos.get("celular")],
-        ["Email", datos.get("email")],
-        ["CBU", datos.get("cbu")],
-        ["Repartición", datos.get("reparticion")]
+        ["Apellido y Nombre", datos.get("nombre").upper()],
+        ["DNI", datos.get("dni").upper()],
+        ["Nacionalidad", datos.get("nacionalidad").upper()],
+        ["Domicilio", datos.get("domicilio").upper()],
+        ["Localidad", datos.get("localidad").upper()],
+        ["CP", datos.get("cp").upper()],
+        ["CUIT", datos.get("cuit").upper()],
+        ["Provincia", datos.get("provincia").upper()],
+        ["Teléfono", datos.get("celular").upper()],
+        ["Email", datos.get("email").upper()],
+        ["CBU", datos.get("cbu").upper()],
+        ["Repartición", datos.get("reparticion").upper()]
     ]))
 
     
@@ -422,15 +422,15 @@ def guardar():
 
     # Referencia 1
     elementos.append(tabla("REFERENCIA 1", [
-        ["Parentesco", datos.get("ref1_parentesco")],
-        ["Nombre", datos.get("ref1_nombre")],
+        ["Parentesco", datos.get("ref1_parentesco").upper()],
+        ["Nombre", datos.get("ref1_nombre").upper()],
         ["Teléfono", datos.get("ref1_tel")]
     ]))
 
     # Referencia 2
     elementos.append(tabla("REFERENCIA 2", [
-        ["Parentesco", datos.get("ref2_parentesco")],
-        ["Nombre", datos.get("ref2_nombre")],
+        ["Parentesco", datos.get("ref2_parentesco").upper()],
+        ["Nombre", datos.get("ref2_nombre").upper()],
         ["Teléfono", datos.get("ref2_tel")]
     ]))
 
@@ -468,7 +468,7 @@ def guardar():
     elementos.append(leyenda)
 
     # Espacio de firma
-    firma = Table([["Firma"],[""]], colWidths=[450], rowHeights=[15,60])
+    firma = Table([["Firma"],[""]], colWidths=[450], rowHeights=[20,120])
     firma.setStyle(TableStyle([("GRID",(0,0),(-1,-1),1,colors.black)]))
     elementos.append(firma)
 
