@@ -110,6 +110,11 @@ button {
     line-height: 1.6;
 }
 
+/* Contenedor de la leyenda */
+.leyenda {
+    position: relative; /* 🔥 CLAVE para que el botón no se descontrole */
+}
+
 /* Botón copiar flotante */
 .btn-copiar {
     position: absolute;
@@ -121,6 +126,21 @@ button {
     padding: 6px 8px;
     cursor: pointer;
     font-size: 14px;
+}
+
+/* Mensaje de copiado */
+.copiado-msg {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    font-size: 12px;
+    color: green;
+    display: none;
+}
+
+/* 🔥 Evita que el botón tape el texto */
+#textoLeyenda {
+    padding-top: 30px;
 }
 
 .btn-copiar:hover {
@@ -194,8 +214,15 @@ AMAT - Mutual Amarilla
 
     <div id="textoLeyenda">
 
+        {% if linea == "haberes" %}
         <p><b>DESCUENTO HABERES</b></p>
+        {% elif linea == "bapro" %}
+        <p><b>DESCUENTO POR DEBITO AUTOMATICO</b></p>
+        {% elif linea == "ayuda" %}
+        <p><b>DESCUENTO POR RECIBO SIN CERTIFICADO</b></p>
+        {% endif %}
 
+        {% if linea == "haberes" %}
         <p>
         Debe pedir el certificado de Afectación a nombre de 
         <b>
@@ -206,10 +233,16 @@ AMAT - Mutual Amarilla
         {% endif %}
         </b>.
         </p>
+        {% endif %}
 
         <p><b>PRE-APROBADO:</b> {{ monto }} en {{ cuotas }} cuotas de 
          $ {{ "{:,.2f}".format(cuota_total).replace(",", "X").replace(".", ",").replace("X", ".") }} 
-        <b>MONTO FINAL</b> (queda sujeto al monto del certificado)
+        <b>MONTO FINAL</b> 
+        {% if linea == "haberes" %}
+        (queda sujeto al monto del certificado)
+        {% else %}
+        (SIN CERTIFICADO)
+        {% endif %}
         </p>
 
         <p><b>DOCUMENTACIÓN:</b></p>
@@ -231,9 +264,9 @@ AMAT - Mutual Amarilla
             {% endif %}
         </ul>
 
-
-
     </div>
+
+</div>
 
 </div>
 

@@ -117,9 +117,19 @@ def calcular_membresia(entidad, reparticion, monto):
 
     # Caso Salud (valores fijos)
     elif reparticion == "salud":
-        cuota_social = 4950
+        cuota_social = 5172
         medico = 5078
         farmacia = 5214
+
+    elif reparticion == "caja_policia":
+        cuota_social = 4390  # 👈 o el valor que corresponda
+        medico = 0
+        farmacia = 0
+
+    elif reparticion == "ips":
+        cuota_social = 4390  # 👈 o el valor que corresponda
+        medico = 0
+        farmacia = 0    
 
     # Retorna los valores calculados
     return cuota_social, medico, farmacia
@@ -147,21 +157,92 @@ def inicio():
     return render_template("index.html", montos=tabla_12.keys())
 
 
-# Ruta que procesa el cálculo de la oferta
 @app.route("/calcular", methods=["POST"])
 def calcular():
 
     # Obtiene datos del formulario
+    linea = request.form["linea"]
     reparticion = request.form["reparticion"]
-    entidad = request.form["entidad"]  # 👈 FIX
+    entidad = request.form["entidad"]
     monto = float(request.form["monto"])
     cuotas = int(request.form["cuotas"])
 
-    # Calcula valores de membresía y cuota
-    cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
-    valor_cuota = calcular_cuota(monto, cuotas)
-    cuota_total = valor_cuota + cuota_social + medico + farmacia
+    print("LINEA:", linea)
 
+       # Calcula valores según línea
+    if linea == "haberes":
+
+        cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
+        valor_cuota = calcular_cuota(monto, cuotas)
+        cuota_total = valor_cuota + cuota_social + medico + farmacia
+
+    elif linea == "ayuda":
+
+        # 🔥 Membresía en 0
+        cuota_social = 1
+        medico = 1
+        farmacia = 1
+
+        # 🔵 AMAT
+        if entidad == "amat":
+
+            if reparticion == "educacion":
+                monto = 200000
+                cuotas = 24
+                valor_cuota = 28996
+
+            elif reparticion == "salud":
+                monto = 100000
+                cuotas = 24
+                valor_cuota = 15464
+
+        # ⚫ 2 DE AGOSTO
+        elif entidad == "dos_agosto":
+
+            if reparticion == "educacion":
+                monto = 200000
+                cuotas = 24
+                valor_cuota = 29896
+
+            elif reparticion == "salud":
+                monto = 0
+                cuotas = 0
+                valor_cuota = 0
+
+        else:
+            return "Entidad no válida"
+
+        cuota_total = valor_cuota
+
+
+    elif linea == "bapro":
+
+        # 🔥 Solo AMAT
+        if entidad != "amat":
+            return "Línea BAPRO no disponible para esta entidad"
+
+        # 🔥 Médico y farmacia en 0
+        medico = 0
+        farmacia = 0
+
+        # 🔥 Cuota social igual a haberes
+        cuota_social, _, _ = calcular_membresia(entidad, reparticion, monto)
+
+        # 🔥 Siempre 12 cuotas
+        cuotas = 12
+
+        # 🔥 Grilla fija BAPRO
+        tabla_bapro = {
+            100000: 12180.02,
+            150000: 18270.03,
+            200000: 24360.04,
+            250000: 0,
+            300000: 0
+        }
+
+        valor_cuota = tabla_bapro.get(monto, 0)
+
+        cuota_total = valor_cuota + cuota_social
 
     # Genera link para enviar al cliente
     link = f"https://datero-amat.onrender.com/cliente?ent={entidad}&rep={reparticion}&monto={monto}&cuotas={cuotas}"
@@ -178,7 +259,9 @@ def calcular():
         medico=formatear(medico),
         farmacia=formatear(farmacia),
         cuota_total=cuota_total,
-        link=link
+        link=link,
+        linea=linea
+        
     )
 
 

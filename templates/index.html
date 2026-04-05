@@ -101,14 +101,21 @@ button:hover {
 <form id="formulario" method="post">
 
 <label>Entidad</label>
-<select name="entidad">
+<select name="entidad" id="entidad">
 <option value="amat">AMAT</option>
 <option value="dos_agosto">2 de Agosto</option>
-</select>    
+</select>
+
+<label>Línea</label>
+<select name="linea" id="linea">
+    <option value="haberes">Haberes</option>
+    <option value="bapro">Bapro</option>
+    <option value="ayuda">Ayudas Económicas</option>
+</select>
 
 <!-- Selector de repartición -->
 <label>Repartición</label>
-<select name="reparticion">
+<select name="reparticion" id="reparticion">
 <option value="policia">Policía</option>
 <option value="educacion">Educación</option>
 <option value="salud">Salud</option>
@@ -116,25 +123,29 @@ button:hover {
 </select>
 
 <!-- Selector de monto -->
-<label>Monto</label>
-<select name="monto">
+<div id="bloqueMonto">
+    <label>Monto</label>
+    <select name="monto">
 
-<!-- Genera automáticamente opciones desde 100.000 hasta 2.000.000 de 100.000 en 100.000 -->
-{% for i in montos %}
-<option value="{{ i }}">
-$ {{ "{:,}".format(i).replace(",", ".") }}
-</option>
-{% endfor %}
+    <!-- Genera automáticamente opciones desde 100.000 hasta 2.000.000 de 100.000 en 100.000 -->
+    {% for i in montos %}
+    <option value="{{ i }}">
+    $ {{ "{:,}".format(i).replace(",", ".") }}
+    </option>
+    {% endfor %}
 
-</select>
+    </select>
+</div>
 
 <!-- Selector de cantidad de cuotas -->
-<label>Cuotas</label>
-<select name="cuotas">
-    <option value="12">12 cuotas</option>
-    <option value="18">18 cuotas</option>
-    <option value="24">24 cuotas</option>
-</select>
+<div id="bloqueCuotas">
+    <label>Cuotas</label>
+    <select name="cuotas">
+        <option value="12">12 cuotas</option>
+        <option value="18">18 cuotas</option>
+        <option value="24">24 cuotas</option>
+    </select>
+</div>
 
 <!-- Botón para enviar el formulario -->
 <button type="submit">Calcular Oferta</button>
@@ -177,5 +188,87 @@ form.addEventListener("submit", function(e) {
     }
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const lineaSelect = document.getElementById("linea");
+    const reparticionSelect = document.getElementById("reparticion");
+    const bloqueMonto = document.getElementById("bloqueMonto");
+    const bloqueCuotas = document.getElementById("bloqueCuotas");
+    const montoSelect = document.querySelector('select[name="monto"]');
+    const entidadSelect = document.getElementById("entidad"); // 👈 NUEVO
+
+    const opcionesReparticionOriginal = reparticionSelect.innerHTML;
+    const opcionesMontoOriginal = montoSelect.innerHTML;
+    const opcionesLineaOriginal = lineaSelect.innerHTML; // 👈 NUEVO
+
+    // 👇 NUEVO BLOQUE (no toca lo demás)
+    entidadSelect.addEventListener("change", function () {
+        const entidad = this.value;
+
+        if (entidad === "dos_agosto") {
+            lineaSelect.innerHTML = `
+                <option value="haberes">Haberes</option>
+                <option value="ayuda">Ayudas Económicas</option>
+            `;
+        } else {
+            lineaSelect.innerHTML = opcionesLineaOriginal;
+        }
+    });
+
+    lineaSelect.addEventListener("change", function () {
+        const linea = this.value;
+
+        // 🔵 AYUDA
+        if (linea === "ayuda") {
+
+            reparticionSelect.innerHTML = `
+                <option value="educacion">Educación</option>
+                <option value="salud">Salud</option>
+            `;
+
+            bloqueMonto.style.display = "none";
+            bloqueCuotas.style.display = "none";
+        }
+
+        // 🟡 BAPRO
+        else if (linea === "bapro") {
+
+            // Reparticiones (agregamos nuevas)
+            reparticionSelect.innerHTML = `
+                ${opcionesReparticionOriginal}
+                <option value="caja_policia">Caja de Policía</option>
+                <option value="ips">IPS</option>
+            `;
+
+            // Mostrar monto pero cambiar opciones
+            bloqueMonto.style.display = "block";
+            bloqueCuotas.style.display = "none";
+
+            montoSelect.innerHTML = `
+                <option value="100000">$ 100.000</option>
+                <option value="150000">$ 150.000</option>
+                <option value="200000">$ 200.000</option>
+                <option value="250000">$ 250.000</option>
+                <option value="300000">$ 300.000</option>
+            `;
+        }
+
+        // 🟢 HABERES
+        else {
+
+            reparticionSelect.innerHTML = opcionesReparticionOriginal;
+
+            bloqueMonto.style.display = "block";
+            bloqueCuotas.style.display = "block";
+
+            montoSelect.innerHTML = opcionesMontoOriginal;
+        }
+    });
+
+});
+</script>
+
 </body>
 </html>
