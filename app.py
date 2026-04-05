@@ -370,8 +370,6 @@ def guardar():
     # Crea un buffer en memoria para generar el PDF
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=20, bottomMargin=20)
-
-    elementos = []
     
     elementos = []
 
@@ -379,10 +377,13 @@ def guardar():
 
     # LOGO
     import os
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
     if datos.get("entidad") == "dos_agosto":
-       ruta_logo = os.path.join("static", "img", "dos_agosto.png")
+       ruta_logo = os.path.join(base_dir, "static", "img", "dos_agosto.png")
     else:
-       ruta_logo = os.path.join("static", "img", "amat.png")
+       ruta_logo = os.path.join(base_dir, "static", "img", "amat.png")
 
     logo = Image(ruta_logo, width=120, height=60)
 
