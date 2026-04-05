@@ -407,7 +407,7 @@ def guardar():
         ["CUIT", datos.get("cuit")],
         ["Provincia", datos.get("provincia")],
         ["Teléfono", datos.get("celular")],
-        ["Email", datos.get("email")]
+        ["Email", datos.get("email")],
         ["CBU", datos.get("cbu")],
         ["Repartición", datos.get("reparticion")]
     ]))
