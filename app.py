@@ -397,6 +397,15 @@ def cliente():
     )
 
 
+from datetime import datetime
+
+def formatear_fecha(fecha):
+    try:
+        return datetime.strptime(fecha, "%Y-%m-%d").strftime("%d/%m/%Y")
+    except:
+        return fecha
+
+
 # Ruta que guarda datos y genera el PDF
 @app.route("/guardar", methods=["POST"])
 def guardar():
@@ -444,7 +453,7 @@ def guardar():
         ["Apellido y Nombre", datos.get("nombre").upper()],
         ["DNI", datos.get("dni").upper()],
         ["Nacionalidad", datos.get("nacionalidad").upper()],
-        ["Fecha de Nacimiento", datos.get("fecha_nacimiento")],
+        ["Fecha de Nacimiento", formatear_fecha(datos.get("fecha_nacimiento"))],
         ["Domicilio", datos.get("domicilio").upper()],
         ["Localidad", datos.get("localidad").upper()],
         ["CP", datos.get("cp").upper()],
