@@ -444,6 +444,7 @@ def guardar():
         ["Apellido y Nombre", datos.get("nombre").upper()],
         ["DNI", datos.get("dni").upper()],
         ["Nacionalidad", datos.get("nacionalidad").upper()],
+        ["Fecha de Nacimiento", datos.get("fecha_nacimiento")],
         ["Domicilio", datos.get("domicilio").upper()],
         ["Localidad", datos.get("localidad").upper()],
         ["CP", datos.get("cp").upper()],
