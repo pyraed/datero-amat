@@ -505,8 +505,7 @@ def guardar():
     leyenda = Table([
     [f"Declaro conocer los derechos y obligaciones de los socios de {nombre_mutual}, las condiciones generales de la prestación recibida la autorización para retención de cuota"],
     ["y descuento de haberes y CBU Resolución 1481 - INAES - ANEXO. Ley Nº 25.246 y ANEXOS correspondientes al organismo donde desempeño mi relación laboral."],   
-    ["Importe a transferir sujeto a grilla del fondeador (en base al Decreto 988/21)."],
-    ["El crédito puede ser pasible del cobro del impuesto al sello (1,2%), según línea crediticia."],
+    ["Importe a transferir sujeto a grilla del fondeador (en base al Decreto 988/21)."]["El crédito puede ser pasible del cobro del impuesto al sello (1,2%), según línea crediticia."],
     ["Registro de firma para legajo y aceptación de plan aprobado"]
     ], colWidths=[460])
 
