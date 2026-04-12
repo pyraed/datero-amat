@@ -259,11 +259,7 @@ AMAT - Mutual Amarilla
             <li>Movimientos</li>
             {% endif %}
 
-            {% if reparticion == "spb" %}
-            <li>Foto tarjeta de débito (frente y dorso)</li>
-            {% endif %}
-
-            {% if linea == "bapro" %}
+            {% if reparticion == "spb" or linea == "bapro" %}
             <li>Foto tarjeta de débito (frente y dorso)</li>
             {% endif %}
         </ul>
