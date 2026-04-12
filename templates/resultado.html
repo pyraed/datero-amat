@@ -100,7 +100,7 @@ button {
 }
 
 .leyenda {
-    position: relative; /* 🔥 clave para el botón */
+    position: relative;
     margin-top: 20px;
     background: #f1f3f6;
     padding: 15px;
@@ -112,14 +112,22 @@ button {
 
 /* Contenedor de la leyenda */
 .leyenda {
-    position: relative; /* 🔥 CLAVE para que el botón no se descontrole */
+    position: relative;
 }
 
-/* Botón copiar flotante */
-.btn-copiar {
+/* NUEVO contenedor para botón + mensaje */
+.copiar-container {
     position: absolute;
     top: 10px;
     right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Botón copiar */
+.btn-copiar {
     background: #e0e3e7;
     border: none;
     border-radius: 6px;
@@ -130,9 +138,6 @@ button {
 
 /* Mensaje de copiado */
 .copiado-msg {
-    position: absolute;
-    top: 10px;
-    right: 50px;
     font-size: 12px;
     color: green;
     display: none;
@@ -151,7 +156,7 @@ button {
     margin-left: 8px;
     font-size: 13px;
     color: #28a745;
-    display: none; /* oculto por defecto */
+    display: none;
 }
 
 .btn-secundario {
@@ -209,8 +214,10 @@ AMAT - Mutual Amarilla
 
 <div class="leyenda">
 
-    <button class="btn-copiar" onclick="copiarLeyenda()">📋</button>
-    <span id="copiadoMsg" class="copiado-msg">✔ Copiado</span>
+    <div class="copiar-container">
+        <button class="btn-copiar" onclick="copiarLeyenda()">📋</button>
+        <span id="copiadoMsg" class="copiado-msg">✔ Copiado</span>
+    </div>
 
     <div id="textoLeyenda">
 
@@ -315,7 +322,6 @@ function copiarTodo() {
         msg.style.display = "none";
     }, 2000);
 }
-
 
 </script>
 
