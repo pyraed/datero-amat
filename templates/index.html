@@ -117,7 +117,7 @@ button:hover {
 <label>Repartición</label>
 <select name="reparticion" id="reparticion">
 <option value="policia">Policía</option>
-<option value="educacion">Educación</option>
+<option value="educacion" selected>Educación</option>
 <option value="salud">Salud</option>
 <option value="spb">SPB</option>
 </select>
@@ -140,10 +140,11 @@ button:hover {
 <!-- Selector de cantidad de cuotas -->
 <div id="bloqueCuotas">
     <label>Cuotas</label>
-    <select name="cuotas">
+    <select name="cuotas"  id="cuotas">
+        <option value="6">6 cuotas</option>
         <option value="12">12 cuotas</option>
         <option value="18">18 cuotas</option>
-        <option value="24">24 cuotas</option>
+        <option value="24" selected>24 cuotas</option>
     </select>
 </div>
 
@@ -203,6 +204,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const opcionesMontoOriginal = montoSelect.innerHTML;
     const opcionesLineaOriginal = lineaSelect.innerHTML; // 👈 NUEVO
 
+    // 🔥 FUNCIÓN NUEVA: DEFAULTS
+    function setDefaults() {
+        const reparticion = document.getElementById("reparticion");
+        const cuotas = document.getElementById("cuotas");
+
+        if (reparticion) reparticion.value = "educacion";
+        if (cuotas) cuotas.value = "24";
+    }
+
     // 👇 BLOQUE EXISTENTE + FIX
     entidadSelect.addEventListener("change", function () {
         const entidad = this.value;
@@ -223,6 +233,9 @@ document.addEventListener("DOMContentLoaded", function () {
             // 🔥 FIX: reconstruir UI también al volver a AMAT
             lineaSelect.dispatchEvent(new Event("change"));
         }
+
+        // 🔥 REAPLICAR DEFAULTS
+        setTimeout(setDefaults, 50);
     });
 
     lineaSelect.addEventListener("change", function () {
@@ -273,7 +286,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             montoSelect.innerHTML = opcionesMontoOriginal;
         }
+
+        // 🔥 REAPLICAR DEFAULTS
+        setTimeout(setDefaults, 50);
     });
+
+    // 🔥 EJECUTAR AL INICIO
+    setDefaults();
 
 });
 </script>
