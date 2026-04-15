@@ -15,6 +15,7 @@ from reportlab.lib import colors
 df = pd.read_excel("grilla.xlsx")
 
 # Crear diccionarios
+tabla_6 = dict(zip(df["Monto"], df["Cuotas6"]))
 tabla_12 = dict(zip(df["Monto"], df["Cuotas12"]))
 tabla_18 = dict(zip(df["Monto"], df["Cuotas18"]))
 tabla_24 = dict(zip(df["Monto"], df["Cuotas24"]))
@@ -141,7 +142,9 @@ def calcular_membresia(entidad, reparticion, monto):
 def calcular_cuota(monto, cuotas):
 
     monto = float(monto)
-
+    
+    if cuotas == 6:
+        return tabla_6.get(monto, 0)
     if cuotas == 12:
         return tabla_12.get(monto, 0)
     elif cuotas == 18:
