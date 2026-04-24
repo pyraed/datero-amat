@@ -1,5 +1,5 @@
 # Importaciones
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, jsonify
 import csv
 import io
 import pandas as pd
@@ -533,6 +533,115 @@ def guardar():
 
     # Devuelve el PDF para descarga
     return send_file(buffer, as_attachment=True, download_name="datero.pdf", mimetype="application/pdf")
+
+
+# ================= API PARA MAKE =================
+
+API_KEY = "123456"
+
+@app.route("/api/calcular_oferta", methods=["POST"])
+def api_calcular_oferta():
+
+    data = request.json
+
+    print("DATA API:", data)  # 👈 para debug
+
+    # 🔐 Seguridad
+    if data.get("api_key") != API_KEY:
+        return jsonify({"error": "No autorizado"}), 401
+
+    try:
+        linea = data.get("linea")
+        reparticion = data.get("reparticion")
+        entidad = data.get("entidad")
+        monto = float(data.get("monto"))
+        cuotas = int(data.get("cuotas"))
+
+        # ================= LOGICA =================
+
+        if linea == "haberes":
+            cuota_social, medico, farmacia = calcular_membresia(entidad, reparticion, monto)
+            valor_cuota = calcular_cuota(monto, cuotas)
+            cuota_total = valor_cuota + cuota_social + medico + farmacia
+
+        elif linea == "ayuda":
+
+            valor_cuota = 0
+            cuota_social = 0
+            medico = 0
+            farmacia = 0
+
+            if entidad == "amat":
+
+                if reparticion == "educacion":
+                    monto = 200000
+                    cuotas = 24
+                    valor_cuota = 28996
+
+                elif reparticion == "salud":
+                    monto = 100000
+                    cuotas = 24
+                    valor_cuota = 15464
+
+            elif entidad == "dos_agosto":
+
+                if reparticion == "educacion":
+                    monto = 200000
+                    cuotas = 24
+                    valor_cuota = 29896
+
+                elif reparticion == "salud":
+                    monto = 0
+                    cuotas = 0
+                    valor_cuota = 0
+
+            cuota_total = valor_cuota
+
+        elif linea == "bapro":
+
+            if entidad != "amat":
+                return jsonify({"error": "Línea BAPRO no disponible"}), 400
+
+            medico = 0
+            farmacia = 0
+
+            cuota_social, _, _ = calcular_membresia(entidad, reparticion, monto)
+
+            cuotas = 12
+
+            tabla_bapro = {
+                100000: 20465.69,
+                150000: 30698.53,
+                200000: 40931.37,
+                250000: 51164.21,
+                300000: 61397.06
+            }
+
+            valor_cuota = tabla_bapro.get(monto, 0)
+            cuota_total = valor_cuota + cuota_social
+
+        else:
+            return jsonify({"error": "Linea no valida"}), 400
+
+        # 🔗 Generar link
+        link = f"https://datero-amat.onrender.com/cliente?ent={entidad}&rep={reparticion}&monto={monto}&cuotas={cuotas}&linea={linea}"
+
+        # 📦 RESPUESTA PARA MAKE
+        return jsonify({
+            "entidad": entidad,
+            "reparticion": reparticion,
+            "monto": monto,
+            "cuotas": cuotas,
+            "valor_cuota": valor_cuota,
+            "cuota_social": cuota_social,
+            "medico": medico,
+            "farmacia": farmacia,
+            "cuota_total": cuota_total,
+            "link_firma": link
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # Ejecuta la app en modo debug
