@@ -227,18 +227,16 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 document.addEventListener("DOMContentLoaded", function() {
 
     const form = document.querySelector("form");
-    const btn = document.getElementById("btnEnviar");
-    const estado = document.getElementById("estado");
 
     form.addEventListener("submit", function(e) {
         e.preventDefault();
 
-        // 🔥 desactivar botón
+        // 🔥 agarramos el botón dentro del form
+        const btn = form.querySelector("button[type='submit']");
+
+        // 🔒 bloquear botón
         btn.disabled = true;
         btn.innerText = "Enviando...";
-
-        // mensaje visual
-        estado.innerText = "⏳ Generando documento y enviando a firma...";
 
         const formData = new FormData(form);
 
@@ -250,17 +248,14 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             console.log("RESPUESTA:", data);
 
-            estado.innerText = "✅ Documento enviado correctamente. Revisá tu WhatsApp para firmar.";
-
-            // opcional: limpiar formulario
-            form.reset();
+            alert("✅ Documento enviado. Revisá tu WhatsApp para firmar.");
         })
         .catch(error => {
             console.error("ERROR:", error);
 
-            estado.innerText = "❌ Error al generar documento.";
+            alert("❌ Error al generar documento");
 
-            // reactivar botón si falla
+            // 🔁 reactivar si falla
             btn.disabled = false;
             btn.innerText = "Enviar a firma";
         });
