@@ -222,5 +222,31 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 </div>
 
+<script>
+const form = document.querySelector("form");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault(); // 🔥 evita que descargue el PDF
+
+    const formData = new FormData(form);
+
+    fetch("/guardar", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+
+        // 🔥 REDIRECCIÓN A FIRMA
+        window.location.href = data.link_firma;
+    })
+    .catch(error => {
+        alert("Error al generar documento");
+        console.error(error);
+    });
+});
+</script>
+
 </body>
 </html>

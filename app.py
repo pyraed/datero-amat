@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, send_file, jsonify
 import csv
 import io
 import pandas as pd
+import requests
+import base64
 
 from reportlab.platypus import Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
@@ -23,6 +25,9 @@ tabla_24 = dict(zip(df["Monto"], df["Cuotas24"]))
 
 # Inicialización Flask
 app = Flask(__name__)
+
+API_WAPI_URL = "https://api.wapifirma.com/api/documentSet"
+API_KEY_WAPI = "z4LNpZ8EWnA35cptNqaz0DAwPKiUnToW"  # 👈 reemplazar por tu api real
 
 # ---------------- LOGICA ----------------
 
@@ -153,6 +158,43 @@ def calcular_cuota(monto, cuotas):
         return tabla_24.get(monto, 0)
     else:
         return 0
+    
+def enviar_a_firma(pdf_bytes, nombre, dni, telefono):
+
+    pdf_base64 = base64.b64encode(pdf_bytes).decode("utf-8")
+
+    payload = {
+        "document": pdf_base64,
+        "document_name": "Datero AMAT",
+        "firma_en_todas_las_hojas": True,
+        "wpp": True,
+        "datos_firmantes": [
+            {
+                "name": nombre,
+                "dni": dni,
+                "phone": telefono,
+                "position": 1
+            }
+        ]
+    }
+
+    headers = {
+        "x-api-key": API_KEY_WAPI,
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(API_WAPI_URL, json=payload, headers=headers)
+
+    data = response.json()
+
+    link = data["urls"][0]["link"]
+
+    return link
+
+
+
+
+
 
 # ---------------- RUTAS ----------------
 
@@ -531,8 +573,28 @@ def guardar():
     doc.build(elementos)
     buffer.seek(0)
 
-    # Devuelve el PDF para descarga
-    return send_file(buffer, as_attachment=True, download_name="datero.pdf", mimetype="application/pdf")
+    buffer.seek(0)
+    pdf_bytes = buffer.getvalue()
+
+    nombre = datos.get("nombre")
+    dni = datos.get("dni")
+    telefono = datos.get("celular")
+    # limpiar todo lo que no sea número
+    telefono = ''.join(filter(str.isdigit, telefono))
+
+    # sacar 0 inicial si existe
+    if telefono.startswith("0"):
+        telefono = telefono[1:]
+
+    # agregar 549 si no lo tiene
+    if not telefono.startswith("549"):
+        telefono = "549" + telefono
+
+    link_firma = enviar_a_firma(pdf_bytes, nombre, dni, telefono)
+
+    return jsonify({
+        "link_firma": link_firma
+})
 
 
 # ================= API PARA MAKE =================
