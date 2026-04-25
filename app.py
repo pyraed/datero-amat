@@ -187,9 +187,14 @@ def enviar_a_firma(pdf_bytes, nombre, dni, telefono):
 
     data = response.json()
 
+    print("RESPUESTA WAPI:", data)
+
+    if "urls" not in data:
+        raise Exception(f"Error WAPI: {data}")
+
     link = data["urls"][0]["link"]
 
-    return link
+    return link 
 
 
 
