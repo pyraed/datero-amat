@@ -216,35 +216,56 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 <input type="hidden" name="farmacia" value="{{ farmacia }}">
 
 <!-- Botón para generar el PDF -->
-<button type="submit">Enviar a firmar</button>
+<button type="submit" id="btnEnviar">Enviar a firma</button>
+<p id="estado" style="font-size:14px; color:green;"></p>
 
 </form>
 
 </div>
 
 <script>
-const form = document.querySelector("form");
+document.addEventListener("DOMContentLoaded", function() {
 
-form.addEventListener("submit", function(e) {
-    e.preventDefault(); // 🔥 evita que descargue el PDF
+    const form = document.querySelector("form");
+    const btn = document.getElementById("btnEnviar");
+    const estado = document.getElementById("estado");
 
-    const formData = new FormData(form);
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
 
-    fetch("/guardar", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
+        // 🔥 desactivar botón
+        btn.disabled = true;
+        btn.innerText = "Enviando...";
 
-        // 🔥 REDIRECCIÓN A FIRMA
-        alert("El documento fue enviado para firma. Vas a recibir un mensaje por WhatsApp.");
-    })
-    .catch(error => {
-        alert("Error al generar documento");
-        console.error(error);
+        // mensaje visual
+        estado.innerText = "⏳ Generando documento y enviando a firma...";
+
+        const formData = new FormData(form);
+
+        fetch("/guardar", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("RESPUESTA:", data);
+
+            estado.innerText = "✅ Documento enviado correctamente. Revisá tu WhatsApp para firmar.";
+
+            // opcional: limpiar formulario
+            form.reset();
+        })
+        .catch(error => {
+            console.error("ERROR:", error);
+
+            estado.innerText = "❌ Error al generar documento.";
+
+            // reactivar botón si falla
+            btn.disabled = false;
+            btn.innerText = "Enviar a firma";
+        });
     });
+
 });
 </script>
 
