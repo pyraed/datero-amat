@@ -173,8 +173,8 @@ def enviar_a_firma(pdf_bytes, nombre, dni, telefono):
                 "name": nombre,
                 "dni": dni,
                 "phone": telefono,
-                "position_x": 200,
-                "position_y": 120,
+                "position_x": 180,
+                "position_y": 90,
                 "page": 1
             }
         ]

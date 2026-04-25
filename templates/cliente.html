@@ -216,7 +216,7 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 <input type="hidden" name="farmacia" value="{{ farmacia }}">
 
 <!-- Botón para generar el PDF -->
-<button type="submit">Generar Datero PDF</button>
+<button type="submit">Enviar a firmar</button>
 
 </form>
 
@@ -239,7 +239,7 @@ form.addEventListener("submit", function(e) {
         console.log(data);
 
         // 🔥 REDIRECCIÓN A FIRMA
-        window.location.href = data.link_firma;
+        alert("El documento fue enviado para firma. Vas a recibir un mensaje por WhatsApp.");
     })
     .catch(error => {
         alert("Error al generar documento");
