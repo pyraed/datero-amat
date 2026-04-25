@@ -163,9 +163,41 @@ oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
 oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúñÑ\s]/g, '')">
 
-<input name="celular" placeholder="Teléfono"
-pattern="\d+" inputmode="numeric"
-oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+<label>Teléfono</label>
+
+<div style="display:flex; align-items:center; gap:6px;">
+  
+  <span style="background:#eee; padding:6px 10px; border-radius:5px;">
+    +54 9
+  </span>
+
+  <input 
+    name="celular"
+    placeholder="2216804368"
+    inputmode="numeric"
+    required
+    style="flex:1; padding:8px; border-radius:5px; border:1px solid #ccc;"
+    oninput="
+      // solo números
+      this.value = this.value.replace(/[^0-9]/g, '');
+
+      // sacar 0 inicial si lo ponen
+      if (this.value.startsWith('0')) {
+        this.value = this.value.substring(1);
+      }
+
+      // limitar a 10 dígitos (Argentina)
+      if (this.value.length > 10) {
+        this.value = this.value.slice(0, 10);
+      }
+    "
+  >
+
+</div>
+
+<small style="font-size:12px; color:#666;">
+Ingresar sin 0 ni 54 (ej: 2216804368)
+</small>
 
 <input type="email" name="email" placeholder="Email">
 
