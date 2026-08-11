@@ -45,7 +45,7 @@ def calcular_membresia(entidad, reparticion, monto):
 
         # Caso Policía
         if reparticion in ["policia"]:
-            cuota_social = 9000
+            cuota_social = 9450
             if monto <= 200000:
                 medico, farmacia = 3750, 3950
             elif monto <= 300000:
@@ -59,7 +59,7 @@ def calcular_membresia(entidad, reparticion, monto):
 
         # Caso Educación
         elif reparticion == "educacion":
-            cuota_social = 9900
+            cuota_social = 9450
             if monto <= 200000:
                 medico, farmacia = 3750, 3950
             elif monto <= 300000:
@@ -71,7 +71,7 @@ def calcular_membresia(entidad, reparticion, monto):
 
         # Caso Salud (valores fijos)
         elif reparticion == "salud":
-            cuota_social = 0
+            cuota_social = 9450
             medico = 0
             farmacia = 0
 
@@ -98,8 +98,21 @@ def calcular_membresia(entidad, reparticion, monto):
     # =========================
 
     # Caso Policía o SPB
-    if reparticion in ["policia", "spb"]:
-        cuota_social = 4300
+    if reparticion == "policia":
+        cuota_social = 4515
+        if monto <= 200000:
+            medico, farmacia = 3850, 3950
+        elif monto <= 300000:
+            medico, farmacia = 6150, 6250
+        elif monto <= 400000:
+            medico, farmacia = 8150, 8250
+        elif monto <= 600000:
+            medico, farmacia = 11850, 11950
+        else:
+            medico, farmacia = 14850, 14950
+
+    elif reparticion == "spb":
+        cuota_social = 4600
         if monto <= 200000:
             medico, farmacia = 3850, 3950
         elif monto <= 300000:
@@ -113,7 +126,7 @@ def calcular_membresia(entidad, reparticion, monto):
 
     # Caso Educación
     elif reparticion == "educacion":
-        cuota_social = 9900
+        cuota_social = 10395
         if monto <= 200000:
             medico, farmacia = 3850, 3950
         elif monto <= 300000:
@@ -125,17 +138,17 @@ def calcular_membresia(entidad, reparticion, monto):
 
     # Caso Salud (valores fijos)
     elif reparticion == "salud":
-        cuota_social = 5172
+        cuota_social = 5430
         medico = 5078
         farmacia = 5214
 
     elif reparticion == "caja_policia":
-        cuota_social = 4390  # 👈 o el valor que corresponda
+        cuota_social = 4390
         medico = 0
         farmacia = 0
 
     elif reparticion == "ips":
-        cuota_social = 4390  # 👈 o el valor que corresponda
+        cuota_social = 4600
         medico = 0
         farmacia = 0    
 
@@ -242,19 +255,19 @@ def calcular():
         if entidad == "amat":
 
             if reparticion == "educacion":
-                cuota_social = 9000
+                cuota_social = 10395
                 medico = 9998
                 farmacia = 9998
 
             elif reparticion == "salud":
-                cuota_social = 5172
+                cuota_social = 5430
                 medico = 5078
                 farmacia = 5214
 
         elif entidad == "dos_agosto":
 
             if reparticion == "educacion":
-                cuota_social = 9900
+                cuota_social = 9450
                 medico = 9998
                 farmacia = 9998
 
@@ -367,19 +380,19 @@ def cliente():
          if entidad == "amat":
 
             if reparticion == "educacion":
-               cuota_social = 9000
+               cuota_social = 10395
                medico = 9998
                farmacia = 9998
 
             elif reparticion == "salud":
-               cuota_social = 5172
+               cuota_social = 5430
                medico = 5078
                farmacia = 5214
 
          elif entidad == "dos_agosto":
 
            if reparticion == "educacion":
-              cuota_social = 9900
+              cuota_social = 9450
               medico = 9998
               farmacia = 9998
 
