@@ -201,6 +201,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const entidadSelect = document.getElementById("entidad"); // 👈 NUEVO
 
     const opcionesReparticionOriginal = reparticionSelect.innerHTML;
+
+    const opcionesReparticionAMAT = `
+        <option value="policia">Policía</option>
+        <option value="educacion" selected>Educación</option>
+        <option value="salud">Salud</option>
+        <option value="spb">SPB</option>
+    `;
+
+    const opcionesReparticionDosAgosto = `
+        <option value="policia">Policía</option>
+        <option value="educacion" selected>Educación</option>
+        <option value="salud">Salud</option>
+        <option value="spb">SPB</option>
+        <option value="ips">IPS</option>
+    `;
     const opcionesMontoOriginal = montoSelect.innerHTML;
     const opcionesLineaOriginal = lineaSelect.innerHTML; // 👈 NUEVO
 
@@ -222,15 +237,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 <option value="haberes">Haberes</option>
                 <option value="ayuda">Ayudas Económicas</option>
             `;
-
-            // 🔥 FIX: si venía de BAPRO, forzar HABERES y reconstruir todo
             lineaSelect.value = "haberes";
+            reparticionSelect.innerHTML = opcionesReparticionDosAgosto;
             lineaSelect.dispatchEvent(new Event("change"));
 
         } else {
             lineaSelect.innerHTML = opcionesLineaOriginal;
-
-            // 🔥 FIX: reconstruir UI también al volver a AMAT
+            reparticionSelect.innerHTML = opcionesReparticionAMAT;
             lineaSelect.dispatchEvent(new Event("change"));
         }
 
@@ -279,7 +292,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // 🟢 HABERES
         else {
 
-            reparticionSelect.innerHTML = opcionesReparticionOriginal;
+            reparticionSelect.innerHTML = entidadSelect.value === "dos_agosto"
+                ? opcionesReparticionDosAgosto
+                : opcionesReparticionAMAT;
 
             bloqueMonto.style.display = "block";
             bloqueCuotas.style.display = "block";

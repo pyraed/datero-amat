@@ -75,6 +75,12 @@ def calcular_membresia(entidad, reparticion, monto):
             medico = 0
             farmacia = 0
 
+        # Caso IPS
+        elif reparticion == "ips":
+            cuota_social = 9000
+            medico = 14850
+            farmacia = 14950
+
 
         # Caso SPB (SEPARADO)
         elif reparticion == "spb":
