@@ -84,17 +84,17 @@ def calcular_membresia(entidad, reparticion, monto):
 
         # Caso SPB (SEPARADO)
         elif reparticion == "spb":
-             cuota_social = 4300
-        if monto <= 200000:
-           medico, farmacia = 3750, 3950
-        elif monto <= 300000:
-           medico, farmacia = 6250, 6450
-        elif monto <= 400000:
-           medico, farmacia = 8250, 8450
-        elif monto <= 600000:
-           medico, farmacia = 11750, 11950
-        else:
-           medico, farmacia = 14750, 14950   
+            cuota_social = 4300
+            if monto <= 200000:
+                medico, farmacia = 3750, 3950
+            elif monto <= 300000:
+                medico, farmacia = 6250, 6450
+            elif monto <= 400000:
+                medico, farmacia = 8250, 8450
+            elif monto <= 600000:
+                medico, farmacia = 11750, 11950
+            else:
+                medico, farmacia = 14750, 14950
 
         return cuota_social, medico, farmacia
 
