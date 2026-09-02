@@ -72,8 +72,8 @@ def calcular_membresia(entidad, reparticion, monto):
         # Caso Salud (valores fijos)
         elif reparticion == "salud":
             cuota_social = 9450
-            medico = 0
-            farmacia = 0
+            medico = 14850
+            farmacia = 14950
 
         # Caso IPS
         elif reparticion == "ips":
