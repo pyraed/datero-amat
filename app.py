@@ -291,19 +291,19 @@ def calcular():
             if reparticion == "educacion":
                 monto = 200000
                 cuotas = 24
-                valor_cuota = 28996
+                valor_cuota = 30589
 
             elif reparticion == "salud":
                 monto = 100000
                 cuotas = 24
-                valor_cuota = 15464
+                valor_cuota = 15822
 
         elif entidad == "dos_agosto":
 
             if reparticion == "educacion":
                 monto = 200000
                 cuotas = 24
-                valor_cuota = 29896
+                valor_cuota = 29626
 
             elif reparticion == "salud":
                 monto = 100000
@@ -416,19 +416,19 @@ def cliente():
             if reparticion == "educacion":
                 monto = 200000
                 cuotas = 24
-                valor_cuota = 28996
+                valor_cuota = 30589
 
             elif reparticion == "salud":
                 monto = 100000
                 cuotas = 24
-                valor_cuota = 15464
+                valor_cuota = 15822
 
          elif entidad == "dos_agosto":
 
             if reparticion == "educacion":
                 monto = 200000
                 cuotas = 24
-                valor_cuota = 29896
+                valor_cuota = 29626
 
             elif reparticion == "salud":
                 monto = 100000
@@ -667,19 +667,19 @@ def api_calcular_oferta():
                 if reparticion == "educacion":
                     monto = 200000
                     cuotas = 24
-                    valor_cuota = 28996
+                    valor_cuota = 30589
 
                 elif reparticion == "salud":
                     monto = 100000
                     cuotas = 24
-                    valor_cuota = 15464
+                    valor_cuota = 15822
 
             elif entidad == "dos_agosto":
 
                 if reparticion == "educacion":
                     monto = 200000
                     cuotas = 24
-                    valor_cuota = 29896
+                    valor_cuota = 29626
 
                 elif reparticion == "salud":
                     monto = 0
