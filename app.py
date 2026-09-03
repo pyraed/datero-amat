@@ -73,7 +73,10 @@ def calcular_membresia(entidad, reparticion, monto):
         elif reparticion == "salud":
             cuota_social = 9630
             medico = 14850
-            farmacia = 14950
+            if monto <= 350000:
+                farmacia = 0
+            else:
+                farmacia = 14950
 
         # Caso IPS
         elif reparticion == "ips":
@@ -277,9 +280,9 @@ def calcular():
                 medico = 9998
                 farmacia = 9998
 
-            else:
-                cuota_social = 0
-                medico = 0
+            elif reparticion == "salud":
+                cuota_social = 9630
+                medico = 14850
                 farmacia = 0
 
         # 🔥 Valores de ayuda
@@ -303,9 +306,9 @@ def calcular():
                 valor_cuota = 29896
 
             elif reparticion == "salud":
-                monto = 0
-                cuotas = 0
-                valor_cuota = 0
+                monto = 100000
+                cuotas = 24
+                valor_cuota = 24480
 
         else:
             return "Entidad no válida"
@@ -428,9 +431,9 @@ def cliente():
                 valor_cuota = 29896
 
             elif reparticion == "salud":
-                monto = 0
-                cuotas = 0
-                valor_cuota = 0
+                monto = 100000
+                cuotas = 24
+                valor_cuota = 24480
 
     elif linea == "bapro":
 
