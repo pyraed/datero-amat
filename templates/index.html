@@ -111,6 +111,7 @@ button:hover {
     <option value="haberes">Haberes</option>
     <option value="bapro">Bapro</option>
     <option value="ayuda">Ayudas Económicas</option>
+    <option value="decreto_352">Decreto 352</option>
 </select>
 
 <!-- Selector de repartición -->
@@ -223,8 +224,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function setDefaults() {
         const reparticion = document.getElementById("reparticion");
         const cuotas = document.getElementById("cuotas");
+        const linea = document.getElementById("linea").value;
 
-        if (reparticion) reparticion.value = "educacion";
+        if (linea !== "decreto_352") {
+            if (reparticion) reparticion.value = "educacion";
+        }
         if (cuotas) cuotas.value = "24";
     }
 
@@ -245,6 +249,17 @@ document.addEventListener("DOMContentLoaded", function () {
             lineaSelect.innerHTML = opcionesLineaOriginal;
             reparticionSelect.innerHTML = opcionesReparticionAMAT;
             lineaSelect.dispatchEvent(new Event("change"));
+        }
+
+        // Restaurar cuotas originales al cambiar entidad
+        const cuotasSelect = document.getElementById("cuotas");
+        if (lineaSelect.value !== "decreto_352") {
+            cuotasSelect.innerHTML = `
+                <option value="6">6 cuotas</option>
+                <option value="12">12 cuotas</option>
+                <option value="18">18 cuotas</option>
+                <option value="24" selected>24 cuotas</option>
+            `;
         }
 
         // 🔥 REAPLICAR DEFAULTS
@@ -289,6 +304,34 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
         }
 
+        // 🟣 DECRETO 352
+        else if (linea === "decreto_352") {
+
+            reparticionSelect.innerHTML = `
+                <option value="decreto_352" selected>Decreto 352</option>
+            `;
+
+            bloqueMonto.style.display = "block";
+            bloqueCuotas.style.display = "block";
+
+            // Montos de 50.000 a 7.500.000 en saltos de 50.000
+            let opcionesMontoDecreto = "";
+            for (let i = 50000; i <= 7500000; i += 50000) {
+                const formatted = i.toLocaleString("es-AR");
+                opcionesMontoDecreto += `<option value="${i}">$ ${formatted}</option>`;
+            }
+            montoSelect.innerHTML = opcionesMontoDecreto;
+
+            // Cuotas: 12, 18, 24, 36
+            const cuotasSelect = document.getElementById("cuotas");
+            cuotasSelect.innerHTML = `
+                <option value="12">12 cuotas</option>
+                <option value="18">18 cuotas</option>
+                <option value="24">24 cuotas</option>
+                <option value="36">36 cuotas</option>
+            `;
+        }
+
         // 🟢 HABERES
         else {
 
@@ -300,6 +343,15 @@ document.addEventListener("DOMContentLoaded", function () {
             bloqueCuotas.style.display = "block";
 
             montoSelect.innerHTML = opcionesMontoOriginal;
+
+            // Restaurar cuotas originales
+            const cuotasSelect = document.getElementById("cuotas");
+            cuotasSelect.innerHTML = `
+                <option value="6">6 cuotas</option>
+                <option value="12">12 cuotas</option>
+                <option value="18">18 cuotas</option>
+                <option value="24" selected>24 cuotas</option>
+            `;
         }
 
         // 🔥 REAPLICAR DEFAULTS

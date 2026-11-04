@@ -227,11 +227,13 @@ AMAT - Mutual Amarilla
         <p><b>DESCUENTO POR DEBITO AUTOMATICO</b></p>
         {% elif linea == "ayuda" %}
         <p><b>DESCUENTO POR RECIBO SIN CERTIFICADO</b></p>
+        {% elif linea == "decreto_352" %}
+        <p><b>DECRETO 352</b></p>
         {% endif %}
 
         {% if linea == "haberes" %}
         <p>
-        Debe pedir el certificado de Afectación a nombre de 
+        Debe pedir el certificado de Afectación a nombre de
         <b>
         {% if entidad == "dos_agosto" %}
             Mutual 2 de Agosto
@@ -240,6 +242,10 @@ AMAT - Mutual Amarilla
         {% endif %}
         </b>.
         </p>
+        {% elif linea == "decreto_352" %}
+        <p>
+        Línea Decreto 352 - AMAT.
+        </p>
         {% endif %}
 
         <p><b>PRE-APROBADO:</b> {{ monto }} en {{ cuotas }} cuotas de 
@@ -247,6 +253,8 @@ AMAT - Mutual Amarilla
         <b>MONTO FINAL</b> 
         {% if linea == "haberes" %}
         (queda sujeto al monto del certificado)
+        {% elif linea == "decreto_352" %}
+        (DECRETO 352)
         {% else %}
         (SIN CERTIFICADO)
         {% endif %}

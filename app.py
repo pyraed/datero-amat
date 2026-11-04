@@ -22,6 +22,13 @@ tabla_12 = dict(zip(df["Monto"], df["Cuotas12"]))
 tabla_18 = dict(zip(df["Monto"], df["Cuotas18"]))
 tabla_24 = dict(zip(df["Monto"], df["Cuotas24"]))
 
+# Cargar grilla Decreto 352
+df_352 = pd.read_excel("grilla_decreto352.xlsx")
+tabla_352_12 = dict(zip(df_352["Monto"], df_352["Cuotas12"]))
+tabla_352_18 = dict(zip(df_352["Monto"], df_352["Cuotas18"]))
+tabla_352_24 = dict(zip(df_352["Monto"], df_352["Cuotas24"]))
+tabla_352_36 = dict(zip(df_352["Monto"], df_352["Cuotas36"]))
+
 
 # Inicialización Flask
 app = Flask(__name__)
@@ -169,7 +176,7 @@ def calcular_membresia(entidad, reparticion, monto):
 def calcular_cuota(monto, cuotas):
 
     monto = float(monto)
-    
+
     if cuotas == 6:
         return tabla_6.get(monto, 0)
     if cuotas == 12:
@@ -178,6 +185,21 @@ def calcular_cuota(monto, cuotas):
         return tabla_18.get(monto, 0)
     elif cuotas == 24:
         return tabla_24.get(monto, 0)
+    else:
+        return 0
+
+def calcular_cuota_352(monto, cuotas):
+
+    monto = float(monto)
+
+    if cuotas == 12:
+        return tabla_352_12.get(monto, 0)
+    elif cuotas == 18:
+        return tabla_352_18.get(monto, 0)
+    elif cuotas == 24:
+        return tabla_352_24.get(monto, 0)
+    elif cuotas == 36:
+        return tabla_352_36.get(monto, 0)
     else:
         return 0
     
@@ -341,6 +363,18 @@ def calcular():
 
         cuota_total = valor_cuota + cuota_social
 
+    elif linea == "decreto_352":
+
+        if entidad != "amat":
+            return "Línea Decreto 352 no disponible para esta entidad"
+
+        cuota_social = 7000
+        medico = 0
+        farmacia = 0
+
+        valor_cuota = calcular_cuota_352(monto, cuotas)
+        cuota_total = valor_cuota + cuota_social
+
     # Genera link para enviar al cliente
     link = f"https://datero-amat.onrender.com/cliente?ent={entidad}&rep={reparticion}&monto={monto}&cuotas={cuotas}&linea={linea}"
 
@@ -456,6 +490,17 @@ def cliente():
         }
 
         valor_cuota = tabla_bapro.get(monto, 0)
+
+    elif linea == "decreto_352":
+
+        if entidad != "amat":
+            return "Línea Decreto 352 no disponible para esta entidad"
+
+        cuota_social = 7000
+        medico = 0
+        farmacia = 0
+
+        valor_cuota = calcular_cuota_352(monto, cuotas)
 
     # Renderiza formulario del cliente
     return render_template(
@@ -709,6 +754,18 @@ def api_calcular_oferta():
             }
 
             valor_cuota = tabla_bapro.get(monto, 0)
+            cuota_total = valor_cuota + cuota_social
+
+        elif linea == "decreto_352":
+
+            if entidad != "amat":
+                return jsonify({"error": "Línea Decreto 352 no disponible"}), 400
+
+            cuota_social = 7000
+            medico = 0
+            farmacia = 0
+
+            valor_cuota = calcular_cuota_352(monto, cuotas)
             cuota_total = valor_cuota + cuota_social
 
         else:
