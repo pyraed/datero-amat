@@ -1,225 +1,420 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-
-<!-- Título de la página -->
 <title>Oferta</title>
-
-<!-- Configuración responsive -->
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Fuente Inter -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Transición suave */
-* { transition: all 0.2s ease; }
+:root {
+    --primary: #FFD600;
+    --primary-dark: #E6C200;
+    --dark: #1a1a1a;
+    --dark-soft: #2C2C2C;
+    --text: #111827;
+    --text-secondary: #6B7280;
+    --text-muted: #9CA3AF;
+    --bg: #F8F9FC;
+    --card: #FFFFFF;
+    --surface: #F3F4F6;
+    --border: #E5E7EB;
+    --success: #059669;
+    --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+    --shadow-xl: 0 20px 50px -12px rgba(0,0,0,0.12);
+    --radius: 12px;
+    --radius-lg: 16px;
+    --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-/* Estilo general */
 body {
-    font-family: 'Inter', Arial;
-    background: #f5f6fa;
-    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Tarjeta principal */
-.card {
-    max-width: 500px;
-    margin: 30px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0px 10px 30px rgba(0,0,0,0.08);
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Encabezado */
+/* ─── HEADER ─── */
 .header {
-    padding: 12px;
-    font-weight: 600;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     {% if entidad == "dos_agosto" %}
-    background: #2C2C2C;
+    background: var(--dark-soft);
+    color: #fff;
     {% else %}
-    background: #FFD600;
+    background: var(--primary);
+    color: var(--dark);
     {% endif %}
 }
 
-/* Ítems de datos (alineados izquierda-derecha) */
-.item {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
-    font-size: 15px;
+.header-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.3);
 }
 
-/* Caja de membresía */
-.box {
-    background: #f1f3f6;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 20px;
-}
-
-/* Input del link */
-input {
-    width: 100%;
-    padding: 14px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-}
-
-/* Botón */
-button {
-    width: 100%;
-    margin-top: 10px;
-    padding: 16px;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    border-radius: 10px;
+.header-title {
     font-weight: 600;
     font-size: 16px;
+    letter-spacing: -0.01em;
 }
 
-.leyenda {
-    margin-top: 20px;
-    background: #f1f3f6;
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #333;
-    line-height: 1.6;
-}
-
-.leyenda ul {
-    padding-left: 20px;
-}
-
-.leyenda {
-    position: relative;
-    margin-top: 20px;
-    background: #f1f3f6;
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #333;
-    line-height: 1.6;
-}
-
-/* Contenedor de la leyenda */
-.leyenda {
-    position: relative;
-}
-
-/* NUEVO contenedor para botón + mensaje */
-.copiar-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+/* ─── MAIN ─── */
+.main {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    padding: 24px 16px 48px;
+    gap: 16px;
 }
 
-/* Botón copiar */
-.btn-copiar {
-    background: #e0e3e7;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 8px;
-    cursor: pointer;
+/* ─── CARD ─── */
+.card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.card-body {
+    padding: 24px;
+}
+
+/* ─── DATA ROWS ─── */
+.data-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
     font-size: 14px;
 }
 
-/* Mensaje de copiado */
+.data-row:last-child {
+    border-bottom: none;
+}
+
+.data-row .label {
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.data-row .value {
+    font-weight: 600;
+    color: var(--text);
+    text-align: right;
+}
+
+/* ─── MEMBERSHIP BOX ─── */
+.membership-box {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.membership-box .data-section-title {
+    margin-bottom: 8px;
+}
+
+.membership-box .data-row {
+    border-bottom-color: rgba(0,0,0,0.06);
+    padding: 8px 0;
+    font-size: 13px;
+}
+
+/* ─── LINK SECTION ─── */
+.link-section {
+    margin-top: 20px;
+}
+
+.link-section h3 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.link-input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-secondary);
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    box-sizing: border-box;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: relative;
+}
+
+.btn-primary {
+    background: var(--dark);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: #E9EAED;
+    transform: translateY(-1px);
+}
+
 .copiado-msg {
     font-size: 12px;
-    color: green;
+    color: var(--success);
+    font-weight: 600;
     display: none;
+    margin-top: 6px;
+    text-align: center;
 }
 
-/* 🔥 Evita que el botón tape el texto */
-#textoLeyenda {
-    padding-top: 30px;
+/* ─── LEYENDA ─── */
+.leyenda-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
 }
 
-.btn-copiar:hover {
-    background: #d1d5db;
+.leyenda-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
 }
 
-.copiado-msg {
-    margin-left: 8px;
+.leyenda-header h3 {
     font-size: 13px;
-    color: #28a745;
-    display: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text);
 }
 
-.btn-secundario {
-    margin-top: 10px;
-    background: #444;
+.btn-copiar-leyenda {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all var(--transition);
+    width: auto;
+    margin: 0;
 }
 
+.btn-copiar-leyenda:hover {
+    background: var(--surface);
+    border-color: #D1D5DB;
+}
+
+.leyenda-body {
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+}
+
+.leyenda-body p {
+    margin-bottom: 10px;
+}
+
+.leyenda-body ul {
+    padding-left: 20px;
+    margin-top: 8px;
+}
+
+.leyenda-body ul li {
+    margin-bottom: 4px;
+    color: var(--text-secondary);
+}
+
+.leyenda-body .highlight {
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 520px) {
+    .main { padding: 16px 12px 32px; }
+    .card-body { padding: 20px; }
+}
 </style>
 </head>
 
 <body>
-
-<!-- Contenedor principal -->
-<div class="card">
+<div class="page-wrapper">
 
 <!-- Header -->
-<div class="header" id="headerEntidad">
-{% if entidad == "dos_agosto" %}
-Mutual 2 de Agosto
-{% else %}
-AMAT - Mutual Amarilla
-{% endif %}
+<div class="header">
+    {% if entidad == "dos_agosto" %}
+    <img src="/static/logo_dos_agosto.png" alt="Logo" class="header-logo">
+    <span class="header-title">Mutual 2 de Agosto</span>
+    {% else %}
+    <img src="/static/logo_amat.jpg" alt="Logo" class="header-logo">
+    <span class="header-title">AMAT - Mutual Amarilla</span>
+    {% endif %}
 </div>
 
-<!-- Datos de la oferta -->
- <div class="item"><b>Entidad:</b> {{ entidad }}</div>
-<div class="item"><b>Repartición:</b> {{ reparticion }}</div>
-<div class="item"><b>Monto:</b> {{ monto }}</div>
-<div class="item"><b>Cuotas:</b> {{ cuotas }}</div>
-<div class="item"><b>Valor Cuota:</b> {{ valor_cuota }}</div>
+<!-- Main -->
+<div class="main">
 
-<!-- Bloque de membresía -->
-<div class="box">
-<b>Membresía</b>
-<div class="item">Cuota Social: {{ cuota_social }}</div>
-<div class="item">Coseguro Médico: {{ medico }}</div>
-<div class="item">Coseguro Farmacia: {{ farmacia }}</div>
-</div>
+<!-- Card: Resultado -->
+<div class="card">
+<div class="card-body">
 
-<!-- Sección del link -->
-<h4>Link para enviar</h4>
+    <div class="data-section-title">Detalle de la oferta</div>
 
-<!-- Input con el link generado -->
-<input id="linkInput" value="{{ link }}" readonly>
-
-<!-- Botón para copiar -->
-<button onclick="copiarLink()">Copiar Link</button>
-<span id="copiadoLinkMsg" class="copiado-msg">✔ Copiado</span>
-
-<!-- Botón copiar todo -->
-<button onclick="copiarTodo()" class="btn-secundario">Copiar Todo</button>
-<span id="copiadoTodoMsg" class="copiado-msg">✔ Copiado</span>
-
-</div>
-
-<div class="leyenda">
-
-    <div class="copiar-container">
-        <button class="btn-copiar" onclick="copiarLeyenda()">📋</button>
-        <span id="copiadoMsg" class="copiado-msg">✔ Copiado</span>
+    <div class="data-row">
+        <span class="label">Entidad</span>
+        <span class="value">{% if entidad == "dos_agosto" %}Mutual 2 de Agosto{% else %}AMAT{% endif %}</span>
+    </div>
+    <div class="data-row">
+        <span class="label">Repartición</span>
+        <span class="value">{% if reparticion == "policia" %}Policía{% elif reparticion == "educacion" %}Educación{% elif reparticion == "salud" %}Salud{% elif reparticion == "spb" %}SPB{% elif reparticion == "ips" %}IPS{% elif reparticion == "caja_policia" %}Caja de Policía{% elif reparticion == "decreto_352" %}Decreto 352{% else %}{{ reparticion }}{% endif %}</span>
+    </div>
+    <div class="data-row">
+        <span class="label">Monto</span>
+        <span class="value">$ {{ monto }}</span>
+    </div>
+    <div class="data-row">
+        <span class="label">Cuotas</span>
+        <span class="value">{{ cuotas }}</span>
+    </div>
+    <div class="data-row">
+        <span class="label">Valor Cuota</span>
+        <span class="value">$ {{ valor_cuota }}</span>
     </div>
 
-    <div id="textoLeyenda">
+    <!-- Membresía -->
+    <div class="membership-box">
+        <div class="data-section-title">Membresía</div>
+        <div class="data-row">
+            <span class="label">Cuota Social</span>
+            <span class="value">$ {{ cuota_social }}</span>
+        </div>
+        <div class="data-row">
+            <span class="label">Coseguro Médico</span>
+            <span class="value">$ {{ medico }}</span>
+        </div>
+        <div class="data-row">
+            <span class="label">Coseguro Farmacia</span>
+            <span class="value">$ {{ farmacia }}</span>
+        </div>
+    </div>
+
+    <!-- Link -->
+    <div class="link-section">
+        <h3>Link para enviar</h3>
+        <input id="linkInput" class="link-input" value="{{ link }}" readonly>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="copiarLink()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                Copiar Link
+            </button>
+            <button class="btn btn-secondary" onclick="copiarTodo()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copiar Todo
+            </button>
+        </div>
+        <span id="copiadoLinkMsg" class="copiado-msg">Copiado al portapapeles</span>
+        <span id="copiadoTodoMsg" class="copiado-msg">Todo copiado al portapapeles</span>
+    </div>
+
+</div>
+</div>
+
+<!-- Card: Leyenda -->
+<div class="leyenda-card">
+    <div class="leyenda-header">
+        <h3>Información para el cliente</h3>
+        <button class="btn-copiar-leyenda" onclick="copiarLeyenda()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copiar
+        </button>
+    </div>
+
+    <div class="leyenda-body" id="textoLeyenda">
 
         {% if linea == "haberes" %}
         <p><b>DESCUENTO HABERES</b></p>
@@ -248,9 +443,9 @@ AMAT - Mutual Amarilla
         </p>
         {% endif %}
 
-        <p><b>PRE-APROBADO:</b> {{ monto }} en {{ cuotas }} cuotas de 
-         $ {{ "{:,.2f}".format(cuota_total).replace(",", "X").replace(".", ",").replace("X", ".") }} 
-        <b>MONTO FINAL</b> 
+        <p><span class="highlight">PRE-APROBADO:</span> {{ monto }} en {{ cuotas }} cuotas de
+         $ {{ "{:,.2f}".format(cuota_total).replace(",", "X").replace(".", ",").replace("X", ".") }}
+        <span class="highlight">MONTO FINAL</span>
         {% if linea == "haberes" %}
         (queda sujeto al monto del certificado)
         {% elif linea == "decreto_352" %}
@@ -279,60 +474,40 @@ AMAT - Mutual Amarilla
 
     </div>
 
+    <span id="copiadoMsg" class="copiado-msg" style="padding: 0 20px 12px; display: none;">Leyenda copiada</span>
 </div>
 
 </div>
+</div>
 
+<!-- Scripts -->
 <script>
-
-// Función que copia el link al portapapeles
 function copiarLink() {
     const link = document.getElementById("linkInput").value;
     navigator.clipboard.writeText(link);
-
     const msg = document.getElementById("copiadoLinkMsg");
-    msg.style.display = "inline";
-
-    setTimeout(() => {
-        msg.style.display = "none";
-    }, 2000);
+    msg.style.display = "block";
+    setTimeout(() => { msg.style.display = "none"; }, 2000);
 }
 
-</script>
-
-<script>
 function copiarLeyenda() {
     const texto = document.getElementById("textoLeyenda").innerText;
     navigator.clipboard.writeText(texto);
-
     const msg = document.getElementById("copiadoMsg");
-    msg.style.display = "inline";
-
-    setTimeout(() => {
-        msg.style.display = "none";
-    }, 2000);
+    msg.style.display = "block";
+    setTimeout(() => { msg.style.display = "none"; }, 2000);
 }
 
 function copiarTodo() {
     const leyenda = document.getElementById("textoLeyenda").innerText;
     const link = document.getElementById("linkInput").value;
-
     const textoCompleto = leyenda + "\n\nLINK:\n" + link;
-
     navigator.clipboard.writeText(textoCompleto);
-
     const msg = document.getElementById("copiadoTodoMsg");
-    msg.style.display = "inline";
-
-    setTimeout(() => {
-        msg.style.display = "none";
-    }, 2000);
+    msg.style.display = "block";
+    setTimeout(() => { msg.style.display = "none"; }, 2000);
 }
-
 </script>
-
-</body>
-</html>
 
 </body>
 </html>
