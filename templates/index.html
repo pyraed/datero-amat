@@ -211,7 +211,7 @@ body {
 }
 
 .btn-submit:hover span {
-    color: var(--dark);
+    color: var(--btn-hover-text, var(--dark));
 }
 
 .btn-submit:active {
@@ -345,12 +345,18 @@ selectEntidadHeader.addEventListener("change", function() {
         headerLogo.src = "/static/logo_dos_agosto.png";
         document.documentElement.style.setProperty("--border-focus", "#555");
         document.documentElement.style.setProperty("--focus-glow", "rgba(44,44,44,0.12)");
+        document.documentElement.style.setProperty("--primary", "#555");
+        document.documentElement.style.setProperty("--primary-dark", "#333");
+        document.documentElement.style.setProperty("--btn-hover-text", "#fff");
     } else {
         headerTitle.innerText = "AMAT - Mutual Amarilla";
         headerEl.classList.remove("dark");
         headerLogo.src = "/static/logo_amat.jpg";
         document.documentElement.style.setProperty("--border-focus", "#FFD600");
         document.documentElement.style.setProperty("--focus-glow", "rgba(255,214,0,0.15)");
+        document.documentElement.style.setProperty("--primary", "#FFD600");
+        document.documentElement.style.setProperty("--primary-dark", "#E6C200");
+        document.documentElement.style.setProperty("--btn-hover-text", "var(--dark)");
     }
 });
 </script>
