@@ -6,11 +6,13 @@ import pandas as pd
 import requests
 import base64
 
-from reportlab.platypus import Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
+from reportlab.lib.colors import HexColor
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
 
 # Cargar la grilla
@@ -524,6 +526,23 @@ def formatear_fecha(fecha):
     except:
         return fecha
 
+def fmt_moneda(valor):
+    if not valor:
+        return ""
+    s = str(valor).strip()
+    if "," in s:
+        if s.endswith(",00"):
+            return s[:-3]
+        return s
+    try:
+        n = float(s)
+        if n == int(n):
+            return "{:,.0f}".format(n).replace(",", ".")
+        else:
+            return "{:,.2f}".format(n).replace(",", "X").replace(".", ",").replace("X", ".")
+    except:
+        return s
+
 
 # Ruta que guarda datos y genera el PDF
 @app.route("/guardar", methods=["POST"])
@@ -539,108 +558,173 @@ def guardar():
 
     # Crea un buffer en memoria para generar el PDF
     buffer = io.BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=20, bottomMargin=20)
-    
-    elementos = []
+    PAGE_W, PAGE_H = letter
+    MARGIN_LR = 40
+    MARGIN_TB = 18
+    content_w = PAGE_W - 2 * MARGIN_LR
 
+    doc = SimpleDocTemplate(buffer, pagesize=letter,
+        topMargin=MARGIN_TB, bottomMargin=MARGIN_TB,
+        leftMargin=MARGIN_LR, rightMargin=MARGIN_LR)
+
+    elementos = []
     styles = getSampleStyleSheet()
 
-    # TITULO
-    if datos.get("entidad") == "dos_agosto":
-       titulo = Paragraph("<b>DATERO - MUTUAL 2 DE AGOSTO</b>", styles["Title"])
-    else:
-       titulo = Paragraph("<b>DATERO - AMAT</b>", styles["Title"])
+    es_dos_agosto = datos.get("entidad") == "dos_agosto"
+    color_marca = HexColor("#2C2C2C") if es_dos_agosto else HexColor("#FFD600")
+    nombre_entidad = "MUTUAL 2 DE AGOSTO" if es_dos_agosto else "AMAT - MUTUAL AMARILLA"
+    nombre_mutual = "Dos de Agosto" if es_dos_agosto else "AMAT"
+    logo_path = "static/logo_dos_agosto.png" if es_dos_agosto else "static/logo_amat.jpg"
 
-    elementos.append(titulo)
-    elementos.append(Spacer(1, 5))
+    color_borde = HexColor("#D1D5DB")
+    color_texto = HexColor("#111827")
+    color_label = HexColor("#6B7280")
 
+    # ── HEADER ──
+    header_title_style = ParagraphStyle("h_title", parent=styles["Normal"],
+        fontSize=14, textColor=color_texto, fontName="Helvetica-Bold", leading=17, alignment=TA_LEFT)
+    header_sub_style = ParagraphStyle("h_sub", parent=styles["Normal"],
+        fontSize=8, textColor=color_label, leading=10, alignment=TA_LEFT)
 
-    # Función interna para crear tablas en el PDF
+    logo = Image(logo_path, width=45, height=45)
+    header_text_cell = [
+        Paragraph(nombre_entidad, header_title_style),
+        Paragraph("DATERO - SOLICITUD DE AYUDA ECONÓMICA", header_sub_style)
+    ]
+    header_table = Table([[logo, header_text_cell]], colWidths=[58, content_w - 58])
+    header_table.setStyle(TableStyle([
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("LEFTPADDING", (0, 0), (-1, -1), 0),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ("TOPPADDING", (0, 0), (-1, -1), 0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+    ]))
+    elementos.append(header_table)
+
+    line_table = Table([[""]], colWidths=[content_w], rowHeights=[2])
+    line_table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), color_marca),
+        ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+    ]))
+    elementos.append(Spacer(1, 4))
+    elementos.append(line_table)
+    elementos.append(Spacer(1, 6))
+
+    # ── ESTILOS TABLAS ──
+    label_style = ParagraphStyle("label", parent=styles["Normal"],
+        fontSize=7.5, textColor=color_label, leading=9)
+    value_style = ParagraphStyle("value", parent=styles["Normal"],
+        fontSize=7.5, textColor=color_texto, fontName="Helvetica-Bold", leading=9)
+    color_texto_section = color_texto if not es_dos_agosto else colors.white
+    section_style = ParagraphStyle("section", parent=styles["Normal"],
+        fontSize=8, textColor=color_texto_section, fontName="Helvetica-Bold", leading=10)
+
+    col_label = 155
+    col_value = content_w - col_label
+
     def tabla(titulo, filas):
-        data = [[titulo, ""]] + filas
-        t = Table(data, colWidths=[200, 250])
-        t.setStyle(TableStyle([
-            ("SPAN", (0,0), (1,0)),
-            ("BACKGROUND", (0,0), (-1,0), colors.grey),
-            ("GRID", (0,0), (-1,-1), 1, colors.black),
-            ("FONTSIZE", (0,0), (-1,-1), 8)
-        ]))
+        header_row = [[Paragraph(titulo, section_style), ""]]
+        data_rows = [[Paragraph(f[0], label_style), Paragraph(str(f[1]), value_style)] for f in filas]
+        data = header_row + data_rows
+        t = Table(data, colWidths=[col_label, col_value])
+        style_cmds = [
+            ("SPAN", (0, 0), (1, 0)),
+            ("BACKGROUND", (0, 0), (-1, 0), color_marca),
+            ("TOPPADDING", (0, 0), (-1, 0), 3),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 3),
+            ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 1), (-1, -1), 2.5),
+            ("BOTTOMPADDING", (0, 1), (-1, -1), 2.5),
+            ("GRID", (0, 0), (-1, -1), 0.4, color_borde),
+            ("BOX", (0, 0), (-1, -1), 0.6, color_borde),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ]
+        for i in range(1, len(data)):
+            if i % 2 == 0:
+                style_cmds.append(("BACKGROUND", (0, i), (-1, i), HexColor("#F9FAFB")))
+        t.setStyle(TableStyle(style_cmds))
         return t
 
-    # Sección datos personales
+    SP = 4
+
     elementos.append(tabla("DATOS PERSONALES", [
-        ["Apellido y Nombre", datos.get("nombre").upper()],
-        ["DNI", datos.get("dni").upper()],
-        ["Nacionalidad", datos.get("nacionalidad").upper()],
-        ["Fecha de Nacimiento", formatear_fecha(datos.get("fecha_nacimiento"))],
-        ["Domicilio", datos.get("domicilio").upper()],
-        ["Localidad", datos.get("localidad").upper()],
-        ["CP", datos.get("cp").upper()],
-        ["CUIT", datos.get("cuit").upper()],
-        ["Provincia", datos.get("provincia").upper()],
-        ["Teléfono", datos.get("celular").upper()],
-        ["Email", datos.get("email").upper()],
-        ["CBU", datos.get("cbu").upper()],
-        ["Repartición", datos.get("reparticion").upper()]
+        ["Apellido y Nombre", datos.get("nombre", "").upper()],
+        ["DNI", datos.get("dni", "").upper()],
+        ["Nacionalidad", datos.get("nacionalidad", "").upper()],
+        ["Fecha de Nacimiento", formatear_fecha(datos.get("fecha_nacimiento", ""))],
+        ["Domicilio", datos.get("domicilio", "").upper()],
+        ["Localidad", datos.get("localidad", "").upper()],
+        ["CP", datos.get("cp", "").upper()],
+        ["CUIT", datos.get("cuit", "").upper()],
+        ["Provincia", datos.get("provincia", "").upper()],
+        ["Teléfono", datos.get("celular", "").upper()],
+        ["Email", datos.get("email", "").upper()],
+        ["CBU", datos.get("cbu", "").upper()],
+        ["Repartición", datos.get("reparticion", "").upper()]
     ]))
+    elementos.append(Spacer(1, SP))
 
-    
-    # Sección membresía
     elementos.append(tabla("MEMBRESÍA", [
-        ["Cuota Social", datos.get("cuota_social")],
-        ["Coseguro Médico", datos.get("medico")],
-        ["Coseguro Farmacia", datos.get("farmacia")]
+        ["Cuota Social", "$ " + fmt_moneda(datos.get("cuota_social", ""))],
+        ["Coseguro Médico", "$ " + fmt_moneda(datos.get("medico", ""))],
+        ["Coseguro Farmacia", "$ " + fmt_moneda(datos.get("farmacia", ""))]
     ]))
+    elementos.append(Spacer(1, SP))
 
-    # Referencia 1
     elementos.append(tabla("REFERENCIA 1", [
-        ["Parentesco", datos.get("ref1_parentesco").upper()],
-        ["Nombre", datos.get("ref1_nombre").upper()],
-        ["Teléfono", datos.get("ref1_tel")]
+        ["Parentesco", datos.get("ref1_parentesco", "").upper()],
+        ["Nombre", datos.get("ref1_nombre", "").upper()],
+        ["Teléfono", datos.get("ref1_tel", "")]
     ]))
+    elementos.append(Spacer(1, SP))
 
-    # Referencia 2
     elementos.append(tabla("REFERENCIA 2", [
-        ["Parentesco", datos.get("ref2_parentesco").upper()],
-        ["Nombre", datos.get("ref2_nombre").upper()],
-        ["Teléfono", datos.get("ref2_tel")]
+        ["Parentesco", datos.get("ref2_parentesco", "").upper()],
+        ["Nombre", datos.get("ref2_nombre", "").upper()],
+        ["Teléfono", datos.get("ref2_tel", "")]
     ]))
+    elementos.append(Spacer(1, SP))
 
-    # Datos del crédito
     elementos.append(tabla("DATOS DE LA AYUDA ECONÓMICA", [
-        ["Monto", datos.get("monto")],
-        ["Cuotas", datos.get("cuotas")],
-        ["Valor Cuota", datos.get("valor_cuota")]
+        ["Monto", "$ " + fmt_moneda(datos.get("monto", ""))],
+        ["Cuotas", datos.get("cuotas", "")],
+        ["Valor Cuota", "$ " + fmt_moneda(datos.get("valor_cuota", ""))]
     ]))
+    elementos.append(Spacer(1, SP))
 
+    # ── LEYENDA ──
+    leyenda_style = ParagraphStyle("leyenda", parent=styles["Normal"],
+        fontSize=6.5, textColor=color_label, leading=8, alignment=TA_LEFT)
+    leyenda_text = f"Declaro conocer los derechos y obligaciones de los socios de {nombre_mutual}, las condiciones generales de la prestación recibida, la autorización para retención de cuota y descuento de haberes y CBU Resolución 1481 - INAES - ANEXO. Ley Nº 25.246 y ANEXOS correspondientes al organismo donde desempeño mi relación laboral. Importe a transferir sujeto a grilla del fondeador (en base al Decreto 988/21). El crédito puede ser pasible del cobro del impuesto al sello (1,2%), según línea crediticia. Registro de firma para legajo y aceptación de plan aprobado."
 
-    # 🔥 Nombre de mutual dinámico
-    if datos.get("entidad") == "dos_agosto":
-       nombre_mutual = "Dos de Agosto"
-    else:
-       nombre_mutual = "AMAT"
-
-    # Texto legal (leyenda)
-    leyenda = Table([
-    [f"Declaro conocer los derechos y obligaciones de los socios de {nombre_mutual}, las condiciones generales de la prestación recibida la autorización para retención de cuota"],
-    ["y descuento de haberes y CBU Resolución 1481 - INAES - ANEXO. Ley Nº 25.246 y ANEXOS correspondientes al organismo donde desempeño mi relación laboral."],   
-    ["Importe a transferir sujeto a grilla del fondeador (en base al Decreto 988/21)." "El crédito puede ser pasible del cobro del impuesto al sello (1,2%), según línea crediticia."],
-    ["Registro de firma para legajo y aceptación de plan aprobado"]
-    ], colWidths=[460])
-
+    leyenda = Table([[Paragraph(leyenda_text, leyenda_style)]], colWidths=[content_w])
     leyenda.setStyle(TableStyle([
-    ("FONTSIZE", (0,0), (-1,-1), 7),
-    ("LEFTPADDING", (0,0), (-1,-1), 2),
-    ("RIGHTPADDING", (0,0), (-1,-1), 2),
-    ("TOPPADDING", (0,0), (-1,-1), 1),
-    ("BOTTOMPADDING", (0,0), (-1,-1), 1),
+        ("BOX", (0, 0), (-1, -1), 0.4, color_borde),
+        ("BACKGROUND", (0, 0), (-1, -1), HexColor("#F9FAFB")),
+        ("LEFTPADDING", (0, 0), (-1, -1), 6), ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+        ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
     ]))
-
     elementos.append(leyenda)
+    elementos.append(Spacer(1, 6))
 
-    # Espacio de firma
-    firma = Table([["Firma"],[""]], colWidths=[450], rowHeights=[20,90])
-    firma.setStyle(TableStyle([("GRID",(0,0),(-1,-1),1,colors.black)]))
+    # ── FIRMA ──
+    firma_label_style = ParagraphStyle("firma_label", parent=styles["Normal"],
+        fontSize=8, textColor=color_texto, fontName="Helvetica-Bold", alignment=TA_CENTER)
+    firma_body_h = 150
+    pad_h = (firma_body_h - 14) / 2
+    firma = Table(
+        [[""], [Paragraph("Firma", firma_label_style)], [""]],
+        colWidths=[content_w], rowHeights=[pad_h, 14, pad_h]
+    )
+    firma.setStyle(TableStyle([
+        ("BOX", (0, 0), (-1, -1), 1, colors.black),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+        ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+    ]))
     elementos.append(firma)
 
     # Construye el PDF
