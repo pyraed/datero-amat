@@ -213,6 +213,7 @@ def enviar_a_firma(pdf_bytes, nombre, dni, telefono):
         "document": pdf_base64,
         "document_name": "Datero AMAT",
         "firma_en_todas_las_hojas": True,
+        "validate_photos": True,
         "wpp": True,
         "datos_firmantes": [
             {
@@ -241,8 +242,9 @@ def enviar_a_firma(pdf_bytes, nombre, dni, telefono):
         raise Exception(f"Error WAPI: {data}")
 
     link = data["urls"][0]["link"]
+    queued = data.get("has_queued_signers", False)
 
-    return link 
+    return link, queued
 
 
 
@@ -748,10 +750,11 @@ def guardar():
     if not telefono.startswith("549"):
         telefono = "549" + telefono
 
-    link_firma = enviar_a_firma(pdf_bytes, nombre, dni, telefono)
+    link_firma, queued = enviar_a_firma(pdf_bytes, nombre, dni, telefono)
 
     return jsonify({
-        "link_firma": link_firma
+        "link_firma": link_firma,
+        "queued": queued,
 })
 
 
