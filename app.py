@@ -35,7 +35,7 @@ tabla_352_36 = dict(zip(df_352["Monto"], df_352["Cuotas36"]))
 # Inicialización Flask
 app = Flask(__name__)
 
-API_WAPI_URL = "https://api.wapifirma.com/api/documentSet"
+API_WAPI_URL = "https://api.wapifirma.com/api/v2/documentSet"
 API_KEY_WAPI = "z4LNpZ8EWnA35cptNqaz0DAwPKiUnToW"  # 👈 reemplazar por tu api real
 
 # ---------------- LOGICA ----------------
